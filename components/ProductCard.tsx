@@ -57,7 +57,8 @@ const ProductCard = ({ image, liked, added }: ProductCardProps) => {
                         <Image
                             src={`/images/similar-item${image}.webp`}
                             fill
-                            alt="similar item 1"
+                            alt={`similar item ${image}`}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                     </div>
                 </div>

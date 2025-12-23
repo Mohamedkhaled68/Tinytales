@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -8,8 +8,8 @@ import ProductCard from "./ProductCard";
 import "swiper/css";
 
 const SimilarProducts = () => {
-    const prevRef = useRef<HTMLDivElement | null>(null);
-    const nextRef = useRef<HTMLDivElement | null>(null);
+    const [isBeginning, setIsBeginning] = useState(true);
+    const [isEnd, setIsEnd] = useState(false);
 
     return (
         <div className="mb-24">
@@ -32,21 +32,12 @@ const SimilarProducts = () => {
 
             <Swiper
                 navigation={{
-                    prevEl: prevRef.current,
-                    nextEl: nextRef.current,
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
                 }}
-                onBeforeInit={(swiper) => {
-                    if (swiper.params.navigation) {
-                        (swiper.params.navigation as any).prevEl =
-                            prevRef.current;
-                        (swiper.params.navigation as any).nextEl =
-                            nextRef.current;
-                    } else {
-                        swiper.params.navigation = {
-                            prevEl: prevRef.current,
-                            nextEl: nextRef.current,
-                        } as any;
-                    }
+                onSlideChange={(swiper) => {
+                    setIsBeginning(swiper.isBeginning);
+                    setIsEnd(swiper.isEnd);
                 }}
                 modules={[Navigation]}
                 spaceBetween={40}
@@ -65,18 +56,20 @@ const SimilarProducts = () => {
             </Swiper>
 
             <div className="mt-10 flex justify-center items-center gap-3 w-fit mx-auto">
-                <div
-                    ref={prevRef}
-                    className="cursor-pointer w-12.5 h-12.5 rounded-full bg-[#E8EDF2] flex justify-center items-center text-tiny-black"
+                <button
+                    className="swiper-button-prev disabled:cursor-not-allowed disabled:opacity-20 cursor-pointer w-12.5 h-12.5 rounded-full bg-[#E8EDF2] flex justify-center items-center text-tiny-black"
+                    aria-label="Previous slide"
+                    disabled={isBeginning}
                 >
                     <FaAngleLeft size={24} />
-                </div>
-                <div
-                    ref={nextRef}
-                    className="cursor-pointer w-12.5 h-12.5 rounded-full bg-tiny-pink flex justify-center items-center text-white"
+                </button>
+                <button
+                    className="swiper-button-next disabled:cursor-not-allowed disabled:opacity-20 cursor-pointer w-12.5 h-12.5 rounded-full bg-tiny-pink flex justify-center items-center text-white"
+                    aria-label="Next slide"
+                    disabled={isEnd}
                 >
                     <FaAngleRight size={24} />
-                </div>
+                </button>
             </div>
         </div>
     );
