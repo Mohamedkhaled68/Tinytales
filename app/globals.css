@@ -1,26 +1,43 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+    font-family: "poppins-medium";
+    src: url("/fonts/Poppins-Medium.woff2") format("woff2");
+    font-display: swap;
+}
+@font-face {
+    font-family: "poppins-semi-bold";
+    src: url("/fonts/Poppins-SemiBold.woff2") format("woff2");
+    font-display: swap;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@font-face {
+    font-family: "poppins-bold";
+    src: url("/fonts/Poppins-Bold.woff2") format("woff2");
+    font-display: swap;
+}
+@font-face {
+    font-family: "poppins-regular";
+    src: url("/fonts/Poppins-Regular.woff2") format("woff2");
+    font-display: swap;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+    --color-tiny-black: #020202;
+    --color-tiny-black-50: #e6e6e6;
+    --color-tiny-black-100: #b0b0b0;
+    --color-tiny-black-200: #8a8a8a;
+    --color-tiny-black-300: #545454;
+    --color-tiny-black-400: #333333;
+    --color-tiny-pink: #be968e;
+
+    --font-poppins-medium: "poppins-medium", sans-serif;
+    --font-poppins-semi-bold: "poppins-semi-bold", sans-serif;
+    --font-poppins-regular: "poppins-regular", sans-serif;
+    --font-poppins-bold: "poppins-bold", sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.outlined-text {
+    color: transparent;
+    -webkit-text-stroke: 1px #000;
 }
