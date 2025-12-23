@@ -12,12 +12,12 @@ const SectionName = ({ secName }: { secName: string }) => {
                 style={{ objectFit: "cover" }}
             />
             <div className="absolute inset-0 flex flex-col justify-center items-center px-4 text-center">
-                <h1 className="outlined-text text-[32px] font-poppins-bold opacity-5 font-bold">
+                <h1 className="outlined-text text-[32px] lg:text-[80px] font-poppins-bold opacity-5 font-bold">
                     {secName}
                 </h1>
             </div>
             <div className="absolute inset-0 flex flex-col justify-center items-center px-4 text-center">
-                <h1 className="text-tiny-black text-[20px] font-poppins-semi-bold">
+                <h1 className="text-tiny-black text-[20px] lg:text-[32px] font-poppins-semi-bold">
                     {secName}
                 </h1>
             </div>

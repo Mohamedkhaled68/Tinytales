@@ -9,23 +9,25 @@ import { RiPhoneFill } from "react-icons/ri";
 import { IoLocationSharp } from "react-icons/io5";
 const Footer = () => {
     return (
-        <footer className="relative h-167.5 w-full overflow-hidden">
-            <div className="absolute inset-0 w-full h-full bg-tiny-black/70 z-10 flex flex-col p-5 pt-8">
-                <Image
-                    src="/images/favicon.svg"
-                    alt="Tinytales Logo"
-                    width={45}
-                    height={35}
-                    loading="eager"
-                />
-                <p className="text-xs font-normal font-poppins-regular leading-[140%] text-white/80 mt-6">
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-                    sed diam nonummy Lorem ipsum dolor sit amet, consectetuer
-                    adipiscing elit, sed diam nonummy dolor sit amet,
-                    consectetuer adipiscing elit, sed diam nonummy
-                </p>
+        <footer className="relative h-167.5 lg:h-80 w-full overflow-hidden">
+            <div className="absolute inset-0 w-full h-full bg-tiny-black/70 z-10 flex flex-col lg:flex-row lg:items-start p-5 pt-8 lg:pt-15 lg:px-20">
+                <div className="flex flex-col">
+                    <Image
+                        src="/images/favicon.svg"
+                        alt="Tinytales Logo"
+                        width={45}
+                        height={35}
+                        loading="eager"
+                    />
+                    <p className="text-xs font-normal font-poppins-regular leading-[140%] text-white/80 mt-6 lg:w-[75%]">
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing
+                        elit, sed diam nonummy Lorem ipsum dolor sit amet,
+                        consectetuer adipiscing elit, sed diam nonummy dolor sit
+                        amet, consectetuer adipiscing elit, sed diam nonummy
+                    </p>
+                </div>
 
-                <div className="flex justify-between items-start w-full text-white mt-8">
+                <div className="flex justify-between items-start w-full text-white mt-8 lg:mt-0">
                     <div className="flex flex-col gap-5">
                         <h1 className="text-[16px] font-semibold font-poppins-semi-bold">
                             Contact Us
@@ -66,41 +68,43 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* Send Email */}
-                <div className="flex flex-col gap-6 mt-5">
-                    <label
-                        className="font-semibold font-poppins-semi-bold text-[16px] text-white"
-                        htmlFor="footer-email"
-                    >
-                        Send Email
-                    </label>
+                <div className="flex flex-col lg:gap-6 w-full lg:ml-10">
+                    {/* Send Email */}
+                    <div className="flex flex-col gap-6 mt-5 lg:mt-0">
+                        <label
+                            className="font-semibold font-poppins-semi-bold text-[16px] text-white"
+                            htmlFor="footer-email"
+                        >
+                            Send Email
+                        </label>
 
-                    <div className="rounded-xl border-[0.5px] border-black/10 text-xs flex items-center gap-2 p-1.5 bg-white">
-                        <input
-                            type="text"
-                            id="footer-email"
-                            placeholder="Email address"
-                            className="outline-none border-none grow pl-4.5"
-                        />
-                        <button className="bg-tiny-pink rounded-xl border-[0.5px] border-black/10 px-6 py-3 font-semibold text-white">
-                            Send
-                        </button>
+                        <div className="rounded-xl border-[0.5px] border-black/10 text-xs flex items-center gap-2 p-1.5 bg-white">
+                            <input
+                                type="text"
+                                id="footer-email"
+                                placeholder="Email address"
+                                className="outline-none border-none grow pl-4.5"
+                            />
+                            <button className="bg-tiny-pink rounded-xl border-[0.5px] border-black/10 px-6 py-3 font-semibold text-white">
+                                Send
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                {/* Social Media */}
-                <div className="flex flex-col gap-3 mt-5">
-                    <p className="text-xs font-semibold font-poppins-semi-bold text text-white">
-                        Follow Us
-                    </p>
+                    {/* Social Media */}
+                    <div className="flex flex-col gap-3 mt-5 lg:mt-0">
+                        <p className="text-xs font-semibold font-poppins-semi-bold text text-white">
+                            Follow Us
+                        </p>
 
-                    <div className="flex gap-4 text-white">
-                        <FaFacebookF size={24} />
-                        <FaTwitter size={24} />
-                        <AiFillInstagram size={24} />
-                        <FaLinkedinIn size={24} />
-                        <TbBrandWhatsappFilled size={24} />
-                        <FaTelegramPlane size={24} />
+                        <div className="flex gap-4 text-white">
+                            <FaFacebookF size={24} />
+                            <FaTwitter size={24} />
+                            <AiFillInstagram size={24} />
+                            <FaLinkedinIn size={24} />
+                            <TbBrandWhatsappFilled size={24} />
+                            <FaTelegramPlane size={24} />
+                        </div>
                     </div>
                 </div>
             </div>

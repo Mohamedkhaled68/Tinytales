@@ -13,9 +13,10 @@ const SimilarProducts = () => {
 
     return (
         <div className="mb-24">
+            {/* heading */}
             <div className="flex flex-col gap-0.5">
                 <div className="relative w-fit">
-                    <h1 className="font-poppins-semi-bold font-semibold text-[16px] text-tiny-black">
+                    <h1 className="font-poppins-semi-bold font-semibold text-[16px] lg:text-[24px] text-tiny-black">
                         Similar Products
                     </h1>
                     <Image
@@ -27,7 +28,7 @@ const SimilarProducts = () => {
                         className="absolute left-0 bottom-1"
                     />
                 </div>
-                <div className="w-10 bg-tiny-pink h-1 rounded-2xl" />
+                <div className="w-10 lg:w-16 bg-tiny-pink h-1 rounded-2xl" />
             </div>
 
             <Swiper
@@ -41,8 +42,23 @@ const SimilarProducts = () => {
                 }}
                 modules={[Navigation]}
                 spaceBetween={40}
-                slidesPerView={2}
-                className="mySwiper mt-4"
+                breakpoints={{
+                    0: {
+                        slidesPerView: 2,
+                        spaceBetween: 10,
+                    },
+                    640: {
+                        slidesPerView: 2,
+                    },
+                    768: {
+                        slidesPerView: 3,
+                    },
+                    1024: {
+                        slidesPerView: 4,
+                        spaceBetween: 10,
+                    },
+                }}
+                className="mt-4"
             >
                 {Array.from({ length: 4 }, (_, i) => (
                     <SwiperSlide key={i}>

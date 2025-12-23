@@ -153,33 +153,36 @@ const ProductDetails = () => {
                             ($300.00 for Piece)
                         </span>
                     </div>
-                    <div className="flex items-center justify-between gap-5">
-                        <div className="rounded-xl p-2 bg-[#F5F5F5] flex justify-between items-center w-full">
-                            <div className="w-10 h-10 rounded-xl bg-white flex justify-center items-center cursor-pointer text-tiny-black-100 font-medium font-poppins-medium text-[28px]">
-                                -
+
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <div className="flex items-center justify-between gap-5 lg:w-[50%]">
+                            <div className="rounded-xl p-2 bg-[#F5F5F5] flex justify-between items-center w-full">
+                                <div className="w-10 h-10 rounded-xl bg-white flex justify-center items-center cursor-pointer text-tiny-black-100 font-medium font-poppins-medium text-[28px]">
+                                    -
+                                </div>
+                                <span className="text-tiny-black-100 font-medium font-poppins-medium text-[24px]">
+                                    01
+                                </span>
+                                <div className="w-10 h-10 rounded-xl bg-white flex justify-center items-center cursor-pointer text-black font-medium font-poppins-medium text-[28px]">
+                                    +
+                                </div>
                             </div>
-                            <span className="text-tiny-black-100 font-medium font-poppins-medium text-[24px]">
-                                01
+                            <span className="text-tiny-black-500 font-medium font-poppins-medium text-[24px]">
+                                $300.00
                             </span>
-                            <div className="w-10 h-10 rounded-xl bg-white flex justify-center items-center cursor-pointer text-black font-medium font-poppins-medium text-[28px]">
-                                +
+                        </div>
+                        <button className="cursor-pointer px-8 py-4 rounded-xl bg-tiny-pink font-medium font-poppins-medium text-white text-[16px] w-full lg:w-fit lg:mt-2 flex items-center justify-center gap-2">
+                            <span>Add To Cart</span>
+                            <div className="relative w-6 h-6 flex justify-center items-center">
+                                <Image
+                                    src={"/images/shop-bag.webp"}
+                                    alt="shop bag icon"
+                                    width={18.363021850585938}
+                                    height={20.75}
+                                />
                             </div>
-                        </div>
-                        <span className="text-tiny-black-500 font-medium font-poppins-medium text-[24px]">
-                            $300.00
-                        </span>
+                        </button>
                     </div>
-                    <button className="px-8 py-4 rounded-xl bg-tiny-pink font-medium font-poppins-medium text-white text-[16px] w-full mt-2 flex items-center justify-center gap-2">
-                        <span>Add To Cart</span>
-                        <div className="relative w-6 h-6 flex justify-center items-center">
-                            <Image
-                                src={"/images/shop-bag.webp"}
-                                alt="shop bag icon"
-                                width={18.363021850585938}
-                                height={20.75}
-                            />
-                        </div>
-                    </button>
                 </div>
             </div>
         </div>

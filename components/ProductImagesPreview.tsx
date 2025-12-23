@@ -28,7 +28,7 @@ export default function ProductImagesPreview() {
     const [isEnd, setIsEnd] = useState(false);
 
     return (
-        <div>
+        <div className="w-full lg:w-130 flex flex-col relative">
             <div className="relative">
                 <Swiper
                     spaceBetween={10}
@@ -82,6 +82,7 @@ export default function ProductImagesPreview() {
                 freeMode={true}
                 watchSlidesProgress={true}
                 modules={[FreeMode, Navigation, Thumbs]}
+                className="w-full"
             >
                 {productImages.map((imgSrc, index) => (
                     <SwiperSlide key={index} className="cursor-pointer">

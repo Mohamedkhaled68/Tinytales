@@ -21,8 +21,8 @@ const RatingAndReviews = () => {
                 <div className="w-10 bg-tiny-pink h-1 rounded-2xl" />
             </div>
 
-            <div className="flex flex-col items-center justify-center">
-                <div className="mt-5">
+            <div className="flex flex-col items-center justify-center lg:flex-row lg:gap-20">
+                <div className="mt-5 flex items-baseline gap-5">
                     <span className="text-[80px] font-medium font-poppins-medium text-tiny-black">
                         4,5
                     </span>
@@ -37,6 +37,18 @@ const RatingAndReviews = () => {
                     <RatingBar rating={"3"} percentage={"6"} />
                     <RatingBar rating={"2"} percentage={"3"} />
                     <RatingBar rating={"1"} percentage={"9"} />
+                </div>
+
+                <div className="hidden lg:flex flex-col items-center w-full">
+                    <p className="text-[16px] font-normal font-poppins-regular text-tiny-black-300">
+                        Total Reviews
+                    </p>
+                    <span className="text-6xl font-poppins-semi-bold font-semibold text-tiny-black">
+                        3.0k
+                    </span>
+                    <button className="cursor-pointer mt-4 rounded-xl px-8 py-4 bg-tiny-pink font-poppins-medium font-medium text-[16px] text-white">
+                        Add Comment
+                    </button>
                 </div>
             </div>
         </>
