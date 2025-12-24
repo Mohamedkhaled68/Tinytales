@@ -59,6 +59,7 @@ export default function RegisterPage() {
             });
 
             document.cookie = `token=${res.data.token}; path=/`;
+            localStorage.setItem("user", JSON.stringify(res.data));
 
             router.push("/auth/verify");
         } catch (err: any) {

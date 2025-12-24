@@ -24,8 +24,6 @@ export default function LoginPage() {
                 body: JSON.stringify({ email, password }),
             });
 
-            console.log(res);
-
             document.cookie = `token=${res.data.token}; path=/`;
             localStorage.setItem("user", JSON.stringify(res.data));
 

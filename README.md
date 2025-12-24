@@ -5,7 +5,7 @@ npm run dev
 
 ## Live Demo
 
-https://your-vercel-link
+https://tinytales-chi.vercel.app
 
 ## Features
 
