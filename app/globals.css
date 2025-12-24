@@ -54,15 +54,15 @@
     padding-inline: 10px;
     z-index: 50;
     /* top: 10px; */
-    margin-bottom: 360px;
+    margin-bottom: 475px;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 639px) {
     .swiper-pagination-fraction,
     .swiper-pagination-custom,
     .swiper-horizontal > .swiper-pagination-bullets,
     .swiper-pagination-bullets.swiper-pagination-horizontal {
-        margin-bottom: 475px;
+        margin-bottom: 360px;
     }
 }
 
