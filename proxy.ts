@@ -5,14 +5,12 @@ export function proxy(request: NextRequest) {
     const token = request.cookies.get("token")?.value;
     const { pathname } = request.nextUrl;
 
-    //Protected route
     if (pathname.startsWith("/dashboard")) {
         if (!token) {
             return NextResponse.redirect(new URL("/auth/login", request.url));
         }
     }
 
-    //Auth pages (login / register)
     if (
         pathname.startsWith("/auth/login") ||
         pathname.startsWith("/auth/register")

@@ -2,22 +2,126 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getTokenFromCookie } from "@/utils/helpers";
+import { apiRequest } from "@/lib/api";
+
+interface User {
+    name: string;
+    email: string;
+    mobile: string;
+    mobile_country_code?: string;
+}
 
 export default function DashboardPage() {
     const router = useRouter();
-    const [name, setName] = useState("");
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        const user = localStorage.getItem("user");
+        const token = getTokenFromCookie();
+        const userData = localStorage.getItem("user");
 
-        if (!token || !user) {
+        console.log(userData);
+        console.log(token);
+
+        if (!token || !userData) {
             router.push("/auth/login");
             return;
         }
 
-        setName(JSON.parse(user).fullName || "User");
-    }, []);
+        setUser(JSON.parse(userData));
+    }, [router]);
 
-    return <h1 style={{ textAlign: "center" }}>Welcome, {name}</h1>;
+    const handleLogout = async () => {
+        const token = getTokenFromCookie();
+        localStorage.removeItem("user");
+        document.cookie =
+            "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+        try {
+            await apiRequest("/auth/logout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            router.push("/auth/login");
+        } catch (err: any) {
+            console.log(err.message);
+        }
+    };
+
+    if (!user) {
+        return null;
+    }
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-12">
+            <div className="w-full max-w-md">
+                <div className="bg-white rounded-2xl shadow-xl p-8">
+                    <div className="text-center mb-8">
+                        <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-100 rounded-full mb-4">
+                            <svg
+                                className="w-10 h-10 text-blue-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                />
+                            </svg>
+                        </div>
+                        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                            Welcome Back!
+                        </h1>
+                        <p className="text-gray-600">
+                            Here's your account information
+                        </p>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div className="bg-gray-50 rounded-lg p-4">
+                            <p className="text-xs font-medium text-gray-500 uppercase mb-1">
+                                Name
+                            </p>
+                            <p className="text-lg font-semibold text-gray-900">
+                                {user.name}
+                            </p>
+                        </div>
+
+                        <div className="bg-gray-50 rounded-lg p-4">
+                            <p className="text-xs font-medium text-gray-500 uppercase mb-1">
+                                Email
+                            </p>
+                            <p className="text-lg font-semibold text-gray-900">
+                                {user.email}
+                            </p>
+                        </div>
+
+                        <div className="bg-gray-50 rounded-lg p-4">
+                            <p className="text-xs font-medium text-gray-500 uppercase mb-1">
+                                Mobile
+                            </p>
+                            <p className="text-lg font-semibold text-gray-900">
+                                {user.mobile_country_code &&
+                                    `${user.mobile_country_code} `}
+                                {user.mobile}
+                            </p>
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={handleLogout}
+                        className="w-full mt-8 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition-colors"
+                    >
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
 }
