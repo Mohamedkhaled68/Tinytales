@@ -1,0 +1,57 @@
+{
+    "auth": {
+        "login": {
+            "header_message": "Please login to your account",
+            "login": "Login",
+            "email": "Email",
+            "email_placeholder": "Enter your Email here",
+            "password": "Password",
+            "password_placeholder": "Enter your Password here",
+            "forgot_password": "Forgot Password ?",
+            "or": "OR",
+            "dont_have_acc": "I Don't Have Account",
+            "signup_now": ", Sign Up Now"
+        },
+        "register": {
+            "header_message": "Please login to your account",
+            "login": "Login",
+            "register": "Sign Up",
+            "full_name": "Full Name",
+            "full_name_placeholder": "Enter your Full Name here",
+            "phone_number": "Phone Number",
+            "phone_number_placeholder": "Enter your Phone Number here",
+            "email": "Email",
+            "email_placeholder": "Enter your Email here",
+            "password": "Password",
+            "password_placeholder": "Enter your Password here",
+            "password_confirmation": "Confirm Password",
+            "password_confirmation_placeholder": "Enter your Password here",
+            "or": "OR",
+            "have_acc": "I Have Account",
+            "login_now": ", login Now"
+        },
+        "forgot_password": {
+            "heading": "Account Recovery",
+            "description": "Please enter your email so we can send you the code.",
+            "email": "Email",
+            "email_placeholder": "Enter your Email here",
+            "send_code": "Send Code"
+        },
+        "create_new_password": {
+            "heading": "Create New Password",
+            "description": "Enter a strong password that contains at least 8 characters consisting of letters and numbers.",
+            "password": "Password",
+            "password_placeholder": "Enter your Password here",
+            "password_confirmation": "Confirm Password",
+            "password_confirmation_placeholder": "Enter your Password here",
+            "login": "Login"
+        },
+        "verify": {
+            "verify_id": "Verify your identity",
+            "sent_message": "we sent 6-digit code to",
+            "code_valid": "this code will be valid for (2) minutes.",
+            "send_code": "Send Code",
+            "resend_code": "Resend Code"
+        }
+    }
+}

@@ -10,7 +10,7 @@ import SimilarProducts from "@/components/SimilarProducts";
 
 export default function Home() {
     return (
-        <div className="min-h-screen flex flex-col">
+        <>
             <Navbar />
             <SectionName secName="T-Shirt" />
             <div className="container mx-auto px-5 py-4 grow">
@@ -34,7 +34,6 @@ export default function Home() {
 
                 <SimilarProducts />
             </div>
-            <Footer />
-        </div>
+        </>
     );
 }

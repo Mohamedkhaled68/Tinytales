@@ -1,0 +1,57 @@
+{
+    "auth": {
+        "login": {
+            "header_message": "سجل الدخول إلى حسابك",
+            "login": "تسجيل الدخول",
+            "email": "البريد اللإلكتروني",
+            "email_placeholder": "أدخل بريدك الإلكتروني",
+            "password": "كلمة السر",
+            "password_placeholder": "أدخل كلمة السر الخاصة بك",
+            "forgot_password": "نسيت كلمة السر ؟",
+            "or": "أو",
+            "dont_have_acc": "لا أمتلك حساب",
+            "signup_now": "، أنشئ حساب الآن"
+        },
+        "register": {
+            "header_message": "أنشئ حسابًا جديدًا الآن",
+            "login": "تسجيل الدخول",
+            "register": "أنشئ حساب",
+            "full_name": "الإسم كامل",
+            "full_name_placeholder": "أدخل اسمك كامل",
+            "phone_number": "رقم الهاتف",
+            "phone_number_placeholder": "ادخل رقم الهاتف الخاص بك",
+            "email": "البريد اللإلكتروني",
+            "email_placeholder": "أدخل بريدك الإلكتروني",
+            "password": "كلمة السر",
+            "password_placeholder": "أدخل كلمة السر الخاصة بك",
+            "password_confirmation": "تأكيد كلمة السر",
+            "password_confirmation_placeholder": "أدخل كلمة السر مرة أخري",
+            "or": "أو",
+            "have_acc": "أنا أمتلك حساب",
+            "login_now": "، سجل الآن"
+        },
+        "forgot_password": {
+            "heading": "استعادة الحساب",
+            "description": "يرجى إدخال بريدك الإلكتروني حتى نتمكن من إرسال الرمز إليك.",
+            "email": "البريد اللإلكتروني",
+            "email_placeholder": "أدخل بريدك الإلكتروني",
+            "send_code": "إرسال الرمز"
+        },
+        "create_new_password": {
+            "heading": "أنشئ كلمة سر جديدة",
+            "description": "أدخل كلمة مرور قوية تحتوي على 8 أحرف على الأقل تتكون من حروف وأرقام.",
+            "password": "كلمة السر",
+            "password_placeholder": "أدخل كلمة السر الخاصة بك",
+            "password_confirmation": "تأكيد كلمة السر",
+            "password_confirmation_placeholder": "أدخل كلمة السر مرة أخري",
+            "login": "سجل الدخول"
+        },
+        "verify": {
+            "verify_id": "تحقق من هويتك",
+            "sent_message": "لقد أرسلنا رمزًا مكوّنًا من 6 أرقام إلى",
+            "code_valid": "سيكون هذا الرمز صالحًا لمدة (دقيقتين).",
+            "send_code": "إرسال الرمز",
+            "resend_code": "إعادة إرسال الرمز"
+        }
+    }
+}

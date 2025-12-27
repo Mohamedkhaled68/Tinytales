@@ -14,6 +14,7 @@ import Link from "next/link";
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const user = null;
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -59,73 +60,126 @@ const Navbar = () => {
                     ))}
                 </div>
 
-                {/* Desktop Icons */}
-                <div className="hidden lg:flex items-center">
-                    <button className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
-                        <BsHandbag size={22} className="text-tiny-black" />
-                    </button>
-                    <button className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
-                        <svg
-                            className="w-5 h-5 text-tiny-black"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                            />
-                        </svg>
-                    </button>
-                    <button className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
-                        <IoHeartOutline size={22} className="text-tiny-black" />
-                    </button>
-                    <button className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
-                        <IoCartOutline size={22} className="text-tiny-black" />
-                    </button>
-                    <button className="flex items-center gap-1 px-3 py-2 rounded-full hover:bg-gray-100 transition duration-200">
-                        <span className="text-sm font-medium text-tiny-black">
-                            EN
-                        </span>
-                        <svg
-                            className="w-4 h-4 text-tiny-black"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 9l-7 7-7-7"
-                            />
-                        </svg>
-                    </button>
-                    <Link
-                        href={"/auth/register"}
-                        className="cursor-pointer flex items-center gap-1 px-3 py-2 rounded-full hover:bg-gray-100 transition duration-200"
-                    >
-                        <MdOutlineAccountCircle
-                            size={24}
-                            className="text-tiny-black"
-                        />
-                        <svg
-                            className="w-4 h-4 text-tiny-black"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 9l-7 7-7-7"
-                            />
-                        </svg>
-                    </Link>
-                </div>
+                {user ? (
+                    <>
+                        {/* Desktop Icons "logged in user" */}
+                        <div className="hidden lg:flex items-center">
+                            <button className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
+                                <BsHandbag
+                                    size={22}
+                                    className="text-tiny-black"
+                                />
+                            </button>
+                            <button className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
+                                <svg
+                                    className="w-5 h-5 text-tiny-black"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                                    />
+                                </svg>
+                            </button>
+                            <button className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
+                                <IoHeartOutline
+                                    size={22}
+                                    className="text-tiny-black"
+                                />
+                            </button>
+                            <button className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
+                                <IoCartOutline
+                                    size={22}
+                                    className="text-tiny-black"
+                                />
+                            </button>
+                            <button className="flex items-center gap-1 px-3 py-2 rounded-full hover:bg-gray-100 transition duration-200">
+                                <span className="text-sm font-medium text-tiny-black">
+                                    EN
+                                </span>
+                                <svg
+                                    className="w-4 h-4 text-tiny-black"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </button>
+                            <Link
+                                href={"/auth/register"}
+                                className="cursor-pointer flex items-center gap-1 px-3 py-2 rounded-full hover:bg-gray-100 transition duration-200"
+                            >
+                                <MdOutlineAccountCircle
+                                    size={24}
+                                    className="text-tiny-black"
+                                />
+                                <svg
+                                    className="w-4 h-4 text-tiny-black"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </Link>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        {/* Desktop Icons "guest" */}
+                        <div className="hidden lg:flex items-center">
+                            <button className="flex items-center gap-1 px-3 py-2 rounded-full hover:bg-gray-100 transition duration-200">
+                                <span className="text-sm font-medium text-tiny-black">
+                                    EN
+                                </span>
+                                <svg
+                                    className="w-4 h-4 text-tiny-black"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </button>
+                            <Link
+                                href={"/login"}
+                                className="cursor-pointer flex items-center gap-1 rounded-xl border-[0.5px] border-[#0000001A] bg-tiny-pink px-9.5 py-3.5"
+                            >
+                                <span className="text-sm font-poppins-medium font-medium text-white">
+                                    Login
+                                </span>
+                                <div className="relative w-6 h-6">
+                                    <Image
+                                        src={"/icons/login.svg"}
+                                        fill
+                                        priority
+                                        alt="login-icon"
+                                    />
+                                </div>
+                            </Link>
+                        </div>
+                    </>
+                )}
 
                 {/* Mobile Menu Button */}
                 <button

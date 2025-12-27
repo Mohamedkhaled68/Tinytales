@@ -1,27 +1,28 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const locales = ["en", "ar"];
+const defaultLocale = "en";
+
 export function proxy(request: NextRequest) {
-    const token = request.cookies.get("token")?.value;
     const { pathname } = request.nextUrl;
 
-    if (pathname.startsWith("/dashboard")) {
-        if (!token) {
-            return NextResponse.redirect(new URL("/auth/login", request.url));
-        }
-    }
+    // Check if the pathname is missing a locale
+    const pathnameHasLocale = locales.some(
+        (locale) =>
+            pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    );
 
-    if (
-        pathname.startsWith("/auth/login") ||
-        pathname.startsWith("/auth/register")
-    ) {
-        if (token) {
-            return NextResponse.redirect(new URL("/dashboard", request.url));
-        }
+    if (!pathnameHasLocale) {
+        // Redirect to default locale
+        return NextResponse.redirect(
+            new URL(`/${defaultLocale}${pathname}`, request.url)
+        );
     }
 
     return NextResponse.next();
 }
+
 export const config = {
-    matcher: ["/dashboard/:path*", "/auth/login", "/auth/register"],
+    matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
 };

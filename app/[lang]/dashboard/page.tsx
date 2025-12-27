@@ -45,7 +45,7 @@ export default function DashboardPage() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            router.push("/auth/login");
+            router.push("/login");
         } catch (err: any) {
             console.log(err.message);
         }
@@ -56,7 +56,7 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-12">
+        <div className="min-h-screen from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-12">
             <div className="w-full max-w-md">
                 <div className="bg-white rounded-2xl shadow-xl p-8">
                     <div className="text-center mb-8">
