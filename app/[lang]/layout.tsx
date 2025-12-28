@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Toaster } from "react-hot-toast";
+import "./globals.css";
 
 type Params = Promise<{ lang: string }>;
 

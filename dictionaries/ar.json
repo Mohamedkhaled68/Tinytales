@@ -52,6 +52,20 @@
             "code_valid": "سيكون هذا الرمز صالحًا لمدة (دقيقتين).",
             "send_code": "إرسال الرمز",
             "resend_code": "إعادة إرسال الرمز"
+        },
+        "validation": {
+            "email_required": "البريد الإلكتروني مطلوب",
+            "email_invalid": "يرجى إدخال عنوان بريد إلكتروني صالح",
+            "password_required": "كلمة السر مطلوبة",
+            "password_min_length": "يجب أن تكون كلمة السر 8 أحرف على الأقل",
+            "password_strong": "يجب أن تحتوي كلمة السر على حرف كبير وحرف صغير ورقم ورمز خاص على الأقل",
+            "password_confirmation_required": "تأكيد كلمة السر مطلوب",
+            "passwords_not_match": "كلمات السر غير متطابقة",
+            "name_required": "الاسم الكامل مطلوب",
+            "name_min_length": "يجب أن يكون الاسم حرفين على الأقل",
+            "mobile_required": "رقم الهاتف مطلوب",
+            "mobile_invalid": "يرجى إدخال رقم هاتف صالح (7-15 رقم)",
+            "otp_required": "يرجى إدخال جميع الأرقام الستة"
         }
     }
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getTokenFromCookie } from "@/utils/helpers";
 import { apiRequest } from "@/lib/api";
+import Link from "next/link";
 
 interface User {
     name: string;
@@ -45,7 +46,7 @@ export default function DashboardPage() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            router.push("/login");
+            router.push("/");
         } catch (err: any) {
             console.log(err.message);
         }
@@ -114,12 +115,20 @@ export default function DashboardPage() {
                         </div>
                     </div>
 
-                    <button
-                        onClick={handleLogout}
-                        className="w-full mt-8 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition-colors"
-                    >
-                        Logout
-                    </button>
+                    <div className="flex flex-col items-center gap-2">
+                        <button
+                            onClick={handleLogout}
+                            className="w-full mt-8 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition-colors"
+                        >
+                            Logout
+                        </button>
+                        <Link
+                            href={"/"}
+                            className="w-full text-center mt-8 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
+                        >
+                            Home
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>

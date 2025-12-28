@@ -21,42 +21,86 @@ const CreateNewPassword = ({ setStep }: CreateNewPasswordProps) => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [errors, setErrors] = useState<{
+        password?: string;
+        password_confirmation?: string;
+    }>({});
 
     const getDic = async () => {
         const dictionary = await getDictionary(lang);
         setDic(dictionary);
     };
 
+    const validatePassword = (password: string) => {
+        if (!password) {
+            return dic?.auth.validation.password_required;
+        }
+        if (password.length < 8) {
+            return dic?.auth.validation.password_min_length;
+        }
+        const passwordRegex =
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return dic?.auth.validation.password_strong;
+        }
+        return "";
+    };
+
+    const validatePasswordConfirmation = (
+        password: string,
+        confirmation: string
+    ) => {
+        if (!confirmation) {
+            return dic?.auth.validation.password_confirmation_required;
+        }
+        if (password !== confirmation) {
+            return dic?.auth.validation.passwords_not_match;
+        }
+        return "";
+    };
+
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-        if (error) setError("");
+        const { name, value } = e.target;
+        setForm({ ...form, [name]: value });
+        setErrors({ ...errors, [name]: "" });
+    };
+
+    const handleBlur = (field: string) => {
+        let error = "";
+
+        if (field === "password") {
+            error = validatePassword(form.password);
+        } else if (field === "password_confirmation") {
+            error = validatePasswordConfirmation(
+                form.password,
+                form.password_confirmation
+            );
+        }
+
+        setErrors({ ...errors, [field]: error });
     };
 
     const handleSubmit = async () => {
-        if (!form.password || !form.password_confirmation) {
-            setError("Please fill in all fields");
-            return;
-        }
+        // Validate all fields
+        const passwordError = validatePassword(form.password);
+        const passwordConfirmationError = validatePasswordConfirmation(
+            form.password,
+            form.password_confirmation
+        );
 
-        if (form.password !== form.password_confirmation) {
-            setError("Passwords do not match");
-            return;
-        }
-
-        const passwordRegex =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-        if (!passwordRegex.test(form.password)) {
-            setError(
-                "Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long."
-            );
+        if (passwordError || passwordConfirmationError) {
+            setErrors({
+                password: passwordError,
+                password_confirmation: passwordConfirmationError,
+            });
             return;
         }
 
         setLoading(true);
         setError("");
+        setErrors({});
 
         try {
             const otp = localStorage.getItem("otp");
@@ -125,17 +169,27 @@ const CreateNewPassword = ({ setStep }: CreateNewPasswordProps) => {
                         </label>
                         <input
                             type="password"
-                            className="rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
+                            className={`rounded-[10px] border-[0.5px] ${
+                                errors.password
+                                    ? "border-red-500"
+                                    : "border-black/15"
+                            } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
                             name="password"
                             id="password"
                             value={form.password}
                             onChange={handleChange}
+                            onBlur={() => handleBlur("password")}
                             disabled={loading}
                             placeholder={
                                 dic?.auth.create_new_password
                                     .password_placeholder
                             }
                         />
+                        {errors.password && (
+                            <p className="text-xs text-red-600 font-poppins-regular mt-1">
+                                {errors.password}
+                            </p>
+                        )}
                     </div>
                     <div className="relative">
                         <label
@@ -151,17 +205,27 @@ const CreateNewPassword = ({ setStep }: CreateNewPasswordProps) => {
                         </label>
                         <input
                             type="password"
-                            className="rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
+                            className={`rounded-[10px] border-[0.5px] ${
+                                errors.password_confirmation
+                                    ? "border-red-500"
+                                    : "border-black/15"
+                            } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
                             name="password_confirmation"
                             id="password_confirmation"
                             value={form.password_confirmation}
                             onChange={handleChange}
+                            onBlur={() => handleBlur("password_confirmation")}
                             disabled={loading}
                             placeholder={
                                 dic?.auth.create_new_password
                                     .password_confirmation_placeholder
                             }
                         />
+                        {errors.password_confirmation && (
+                            <p className="text-xs text-red-600 font-poppins-regular mt-1">
+                                {errors.password_confirmation}
+                            </p>
+                        )}
                     </div>
 
                     {/* Error Message */}

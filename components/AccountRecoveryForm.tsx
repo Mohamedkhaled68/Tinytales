@@ -16,6 +16,7 @@ const AccountRecoveryForm = ({ setStep }: AccountRecoveryFormProps) => {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [emailError, setEmailError] = useState("");
 
     const { lang } = useParams<{ lang: "en" | "ar" }>();
 
@@ -24,13 +25,38 @@ const AccountRecoveryForm = ({ setStep }: AccountRecoveryFormProps) => {
         setDic(dictionary);
     };
 
+    const validateEmail = (email: string) => {
+        if (!email.trim()) {
+            return dic?.auth.validation.email_required;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return dic?.auth.validation.email_invalid;
+        }
+        return "";
+    };
+
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
+        setEmailError("");
+    };
+
+    const handleEmailBlur = () => {
+        const error = validateEmail(email);
+        setEmailError(error);
+    };
+
     const handleSubmit = async () => {
-        if (!email) {
-            setError("Please enter your email");
+        const emailValidationError = validateEmail(email);
+
+        if (emailValidationError) {
+            setEmailError(emailValidationError);
             return;
         }
 
         setLoading(true);
+        setEmailError("");
+
         try {
             const res = await apiRequest("/forget-password/check-email", {
                 method: "POST",
@@ -49,10 +75,6 @@ const AccountRecoveryForm = ({ setStep }: AccountRecoveryFormProps) => {
         } finally {
             setLoading(false);
         }
-
-        // On success:
-        setStep("otp");
-        setLoading(false);
     };
 
     useEffect(() => {
@@ -93,16 +115,26 @@ const AccountRecoveryForm = ({ setStep }: AccountRecoveryFormProps) => {
                         </label>
                         <input
                             type="email"
-                            className="rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
+                            className={`rounded-[10px] border-[0.5px] ${
+                                emailError
+                                    ? "border-red-500"
+                                    : "border-black/15"
+                            } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
                             name="email"
                             id="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={handleEmailChange}
+                            onBlur={handleEmailBlur}
                             placeholder={
                                 dic?.auth.forgot_password.email_placeholder
                             }
                             disabled={loading}
                         />
+                        {emailError && (
+                            <p className="text-xs text-red-600 font-poppins-regular mt-1">
+                                {emailError}
+                            </p>
+                        )}
                     </div>
 
                     {error && (

@@ -1,22 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { apiRequest } from "@/lib/api";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { getDictionary } from "../../dictionaries";
-import toast from "react-hot-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginPage() {
-    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+        {}
+    );
     const [dic, setDic] = useState<any>(null);
 
     const { lang } = useParams<{ lang: "en" | "ar" }>();
+
+    const { loginUser, isLoading } = useAuth();
 
     const getDic = async () => {
         const dictionary = await getDictionary(lang);
@@ -27,32 +28,71 @@ export default function LoginPage() {
         getDic();
     }, [lang]);
 
+    const validateEmail = (email: string) => {
+        if (!email.trim()) {
+            return dic?.auth.validation.email_required;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return dic?.auth.validation.email_invalid;
+        }
+        return "";
+    };
+
+    const validatePassword = (password: string) => {
+        if (!password) {
+            return dic?.auth.validation.password_required;
+        }
+        if (password.length < 8) {
+            return dic?.auth.validation.password_min_length;
+        }
+        return "";
+    };
+
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setEmail(value);
+        setErrors({ ...errors, email: "" });
+    };
+
+    const handleEmailBlur = () => {
+        const emailError = validateEmail(email);
+        setErrors({ ...errors, email: emailError });
+    };
+
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setPassword(value);
+        setErrors({ ...errors, password: "" });
+    };
+
+    const handlePasswordBlur = () => {
+        const passwordError = validatePassword(password);
+        setErrors({ ...errors, password: passwordError });
+    };
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
-        setError("");
+
+        const emailError = validateEmail(email);
+        const passwordError = validatePassword(password);
+
+        if (emailError || passwordError) {
+            setErrors({ email: emailError, password: passwordError });
+            return;
+        }
+
+        setErrors({});
 
         try {
-            const res = await apiRequest("/auth/login", {
-                method: "POST",
-                body: JSON.stringify({ email, password }),
-            });
-
-            document.cookie = `token=${res.data.token}; path=/`;
-            localStorage.setItem("user", JSON.stringify(res.data));
-
-            toast.success("Logged in Successfully");
-
-            router.push(`/${lang}/dashboard`);
+            await loginUser(email, password, lang);
         } catch (err: any) {
-            toast.error(err.message);
-        } finally {
-            setLoading(false);
+            console.error("Login error:", err);
         }
     };
 
     return (
-        <div className="bg-white z-10 w-full lg:w-100 mx-auto rounded-[40px] p-6 shadow-[0_0_140px_-56px_rgba(0,0,0,0.25)]">
+        <div className="bg-white z-10 w-full md:w-120 mx-auto rounded-[40px] p-6 shadow-[0_0_140px_-56px_rgba(0,0,0,0.25)]">
             <div className="flex flex-col">
                 <div className="flex flex-col items-center gap-2">
                     <div className="relative w-19 h-14.75">
@@ -75,14 +115,24 @@ export default function LoginPage() {
                         </label>
                         <input
                             type="email"
-                            className="rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
+                            className={`rounded-[10px] border-[0.5px] ${
+                                errors.email
+                                    ? "border-red-500"
+                                    : "border-black/15"
+                            } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
                             name="email"
                             id="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={handleEmailChange}
+                            onBlur={handleEmailBlur}
                             placeholder={dic?.auth.login.email_placeholder}
-                            disabled={loading}
+                            disabled={isLoading}
                         />
+                        {errors.email && (
+                            <p className="text-xs text-red-600 font-poppins-regular mt-1">
+                                {errors.email}
+                            </p>
+                        )}
                     </div>
                     <div className="relative mt-8">
                         <label
@@ -95,23 +145,25 @@ export default function LoginPage() {
                         </label>
                         <input
                             type="password"
-                            className="rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
+                            className={`rounded-[10px] border-[0.5px] ${
+                                errors.password
+                                    ? "border-red-500"
+                                    : "border-black/15"
+                            } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
                             name="password"
                             id="password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={handlePasswordChange}
+                            onBlur={handlePasswordBlur}
                             placeholder={dic?.auth.login.password_placeholder}
-                            disabled={loading}
+                            disabled={isLoading}
                         />
-                    </div>
-
-                    {error && (
-                        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <p className="text-xs text-red-600 font-poppins-regular">
-                                {error}
+                        {errors.password && (
+                            <p className="text-xs text-red-600 font-poppins-regular mt-1">
+                                {errors.password}
                             </p>
-                        </div>
-                    )}
+                        )}
+                    </div>
 
                     <Link
                         className={`text-tiny-pink text-sm font-semibold font-poppins-semi-bold ${
@@ -124,10 +176,10 @@ export default function LoginPage() {
 
                     <button
                         onClick={handleLogin}
-                        disabled={loading}
+                        disabled={isLoading}
                         className="cursor-pointer mt-3 py-4 w-full bg-tiny-pink text-center text-white text-sm font-semibold font-poppins-semi-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-opacity-90 transition-all"
                     >
-                        {loading ? "Loading..." : dic?.auth.login.login}
+                        {isLoading ? "Loading..." : dic?.auth.login.login}
                     </button>
                 </div>
 
@@ -141,7 +193,7 @@ export default function LoginPage() {
 
                 <Link
                     href={`/${lang}/register`}
-                    className="cursor-pointer py-4 w-full border-[0.5px] border-tiny-pink rounded-2xl flex justify-center"
+                    className="cursor-pointer py-4 w-full border-[0.5px] border-tiny-pink rounded-2xl flex justify-center flex-wrap"
                 >
                     <span className="text-sm text-tiny-black font-poppins-regular font-normal">
                         {dic?.auth.login.dont_have_acc}

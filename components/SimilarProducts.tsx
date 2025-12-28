@@ -62,11 +62,7 @@ const SimilarProducts = () => {
             >
                 {Array.from({ length: 4 }, (_, i) => (
                     <SwiperSlide key={i}>
-                        <ProductCard
-                            added={false}
-                            liked={false}
-                            image={`${i + 1}`}
-                        />
+                        {/* <ProductCard  image={`${i + 1}`} />/ */}
                     </SwiperSlide>
                 ))}
             </Swiper>

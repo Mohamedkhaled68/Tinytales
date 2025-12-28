@@ -43,6 +43,7 @@ export default function ProductImagesPreview() {
                         setIsEnd(swiper.isEnd);
                     }}
                     modules={[FreeMode, Navigation, Thumbs, Pagination]}
+                    className="product-images-preview"
                 >
                     {productImages.map((imgSrc, index) => (
                         <SwiperSlide key={index}>

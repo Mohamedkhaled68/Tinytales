@@ -47,6 +47,8 @@ export default function OtpForm({ type, setStep }: OtpFormParams) {
         newCode[index] = value;
         setCode(newCode);
 
+        if (error) setError("");
+
         if (value && index < 5) {
             inputRefs.current[index + 1]?.focus();
         }
@@ -81,7 +83,9 @@ export default function OtpForm({ type, setStep }: OtpFormParams) {
         const fullCode = code.join("");
 
         if (fullCode.length !== 6) {
-            setError("Please enter all 6 digits");
+            setError(
+                dic?.auth.validation.otp_required || "Please enter all 6 digits"
+            );
             return;
         }
 
@@ -235,7 +239,9 @@ export default function OtpForm({ type, setStep }: OtpFormParams) {
                                 }
                                 onKeyDown={(e) => handleKeyDown(index, e)}
                                 onPaste={handlePaste}
-                                className="w-10 lg:w-12 h-13 text-center text-2xl font-semibold font-poppins-semi-bold border-[0.5px] border-black/15 rounded-[18px] lg:rounded-[20px] outline-none focus:border-tiny-pink focus:ring-2 focus:ring-tiny-pink/20 transition-all"
+                                className={`w-10 lg:w-12 h-13 text-center text-2xl font-semibold font-poppins-semi-bold border-[0.5px] ${
+                                    error ? "border-red-500" : "border-black/15"
+                                } rounded-[18px] lg:rounded-[20px] outline-none focus:border-tiny-pink focus:ring-2 focus:ring-tiny-pink/20 transition-all`}
                             />
                         ))}
                     </div>

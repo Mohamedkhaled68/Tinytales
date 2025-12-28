@@ -1,20 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { apiRequest } from "@/lib/api";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Flag from "react-world-flags";
 
-// Import your countries data
 import countriesData from "@/public/data/countries.json";
 import { getDictionary } from "../../dictionaries";
+import { useAuth } from "@/hooks/useAuth";
 import toast from "react-hot-toast";
 
 export default function RegisterPage() {
-    const router = useRouter();
     const { lang } = useParams<{ lang: "en" | "ar" }>();
+
+    const { registerUser, isLoading } = useAuth();
 
     const [form, setForm] = useState({
         name: "",
@@ -33,8 +33,13 @@ export default function RegisterPage() {
     });
 
     const [showCountryDropdown, setShowCountryDropdown] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const [errors, setErrors] = useState<{
+        name?: string;
+        email?: string;
+        mobile?: string;
+        password?: string;
+        password_confirmation?: string;
+    }>({});
 
     const [dic, setDic] = useState<any>(null);
 
@@ -47,10 +52,98 @@ export default function RegisterPage() {
         getDic();
     }, [lang]);
 
+    const validateName = (name: string) => {
+        if (!name.trim()) {
+            return dic?.auth.validation.name_required;
+        }
+        if (name.trim().length < 2) {
+            return dic?.auth.validation.name_min_length;
+        }
+        return "";
+    };
+
+    const validateEmail = (email: string) => {
+        if (!email.trim()) {
+            return dic?.auth.validation.email_required;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return dic?.auth.validation.email_invalid;
+        }
+        return "";
+    };
+
+    const validateMobile = (mobile: string) => {
+        if (!mobile.trim()) {
+            return dic?.auth.validation.mobile_required;
+        }
+        if (!/^\d{7,15}$/.test(mobile)) {
+            return dic?.auth.validation.mobile_invalid;
+        }
+        return "";
+    };
+
+    const validatePassword = (password: string) => {
+        if (!password) {
+            return dic?.auth.validation.password_required;
+        }
+        if (password.length < 8) {
+            return dic?.auth.validation.password_min_length;
+        }
+        const passwordRegex =
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return dic?.auth.validation.password_strong;
+        }
+        return "";
+    };
+
+    const validatePasswordConfirmation = (
+        password: string,
+        confirmation: string
+    ) => {
+        if (!confirmation) {
+            return dic?.auth.validation.password_confirmation_required;
+        }
+        if (password !== confirmation) {
+            return dic?.auth.validation.passwords_not_match;
+        }
+        return "";
+    };
+
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setForm({ ...form, [name]: value });
+        setErrors({ ...errors, [name]: "" });
+    };
+
+    const handleBlur = (field: string) => {
+        let error = "";
+
+        switch (field) {
+            case "name":
+                error = validateName(form.name);
+                break;
+            case "email":
+                error = validateEmail(form.email);
+                break;
+            case "mobile":
+                error = validateMobile(form.mobile);
+                break;
+            case "password":
+                error = validatePassword(form.password);
+                break;
+            case "password_confirmation":
+                error = validatePasswordConfirmation(
+                    form.password,
+                    form.password_confirmation
+                );
+                break;
+        }
+
+        setErrors({ ...errors, [field]: error });
     };
 
     const handleCountrySelect = (country: any) => {
@@ -61,54 +154,44 @@ export default function RegisterPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
-        setError("");
 
-        if (form.password !== form.password_confirmation) {
-            setError("Passwords do not match");
-            setLoading(false);
-            return;
-        }
+        const nameError = validateName(form.name);
+        const emailError = validateEmail(form.email);
+        const mobileError = validateMobile(form.mobile);
+        const passwordError = validatePassword(form.password);
+        const passwordConfirmationError = validatePasswordConfirmation(
+            form.password,
+            form.password_confirmation
+        );
 
-        const passwordRegex =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-        if (!passwordRegex.test(form.password)) {
-            setError(
-                "Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long."
-            );
-            setLoading(false);
-            return;
-        }
-
-        if (!/^\d{7,15}$/.test(form.mobile)) {
-            setError("Please enter a valid mobile number");
-            setLoading(false);
-            return;
-        }
-        try {
-            const res = await apiRequest("/auth/register", {
-                method: "POST",
-                body: JSON.stringify(form),
+        if (
+            nameError ||
+            emailError ||
+            mobileError ||
+            passwordError ||
+            passwordConfirmationError
+        ) {
+            setErrors({
+                name: nameError,
+                email: emailError,
+                mobile: mobileError,
+                password: passwordError,
+                password_confirmation: passwordConfirmationError,
             });
+            return;
+        }
 
-            document.cookie = `token=${res.data.token}; path=/`;
-            localStorage.setItem("user", JSON.stringify(res.data));
+        setErrors({});
 
-            lang === "ar"
-                ? toast.success(res.message)
-                : toast.success("Account Created Successfully");
-
-            router.push(`/${lang}/verify`);
+        try {
+            await registerUser(form, lang);
         } catch (err: any) {
-            toast.error(err.message);
-        } finally {
-            setLoading(false);
+            toast.error("Registration error:", err);
         }
     };
 
     return (
-        <div className="bg-white z-10 w-full lg:w-120 mx-auto rounded-[40px] p-6 shadow-[0_0_140px_-56px_rgba(0,0,0,0.25)]">
+        <div className="bg-white z-10 w-full md:w-120 mx-auto rounded-[40px] p-6 shadow-[0_0_140px_-56px_rgba(0,0,0,0.25)]">
             <div className="flex flex-col">
                 <div className="flex flex-col items-center gap-2">
                     <div className="relative w-19 h-14.75">
@@ -132,15 +215,25 @@ export default function RegisterPage() {
                             </label>
                             <input
                                 type="text"
-                                className="rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
+                                className={`rounded-[10px] border-[0.5px] ${
+                                    errors.name
+                                        ? "border-red-500"
+                                        : "border-black/15"
+                                } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
                                 name="name"
                                 id="name"
                                 value={form.name}
                                 onChange={handleChange}
+                                onBlur={() => handleBlur("name")}
                                 placeholder={
                                     dic?.auth.register.full_name_placeholder
                                 }
                             />
+                            {errors.name && (
+                                <p className="text-xs text-red-600 font-poppins-regular mt-1">
+                                    {errors.name}
+                                </p>
+                            )}
                         </div>
                         <div className="relative">
                             <label
@@ -153,15 +246,25 @@ export default function RegisterPage() {
                             </label>
                             <input
                                 type="email"
-                                className="rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
+                                className={`rounded-[10px] border-[0.5px] ${
+                                    errors.email
+                                        ? "border-red-500"
+                                        : "border-black/15"
+                                } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
                                 name="email"
                                 id="email"
                                 value={form.email}
                                 onChange={handleChange}
+                                onBlur={() => handleBlur("email")}
                                 placeholder={
                                     dic?.auth.register.email_placeholder
                                 }
                             />
+                            {errors.email && (
+                                <p className="text-xs text-red-600 font-poppins-regular mt-1">
+                                    {errors.email}
+                                </p>
+                            )}
                         </div>
 
                         {/* Phone Number with Country Selector */}
@@ -174,7 +277,13 @@ export default function RegisterPage() {
                             >
                                 {dic?.auth.register.phone_number}
                             </label>
-                            <div className="flex items-center rounded-[10px] border-[0.5px] border-black/15">
+                            <div
+                                className={`flex items-center rounded-[10px] border-[0.5px] ${
+                                    errors.mobile
+                                        ? "border-red-500"
+                                        : "border-black/15"
+                                }`}
+                            >
                                 {/* Country Selector Dropdown */}
                                 <div className="relative">
                                     <button
@@ -267,19 +376,25 @@ export default function RegisterPage() {
                                 {/* Phone Input */}
                                 <input
                                     type="tel"
-                                    className={`font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none rounded-r-[10px] ${
+                                    className={`font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none ${
                                         lang === "ar" ? "text-right" : ""
                                     }`}
                                     name="mobile"
                                     id="mobile"
                                     value={form.mobile}
                                     onChange={handleChange}
+                                    onBlur={() => handleBlur("mobile")}
                                     placeholder={
                                         dic?.auth.register
                                             .phone_number_placeholder
                                     }
                                 />
                             </div>
+                            {errors.mobile && (
+                                <p className="text-xs text-red-600 font-poppins-regular mt-1">
+                                    {errors.mobile}
+                                </p>
+                            )}
                         </div>
 
                         <div className="relative">
@@ -293,15 +408,25 @@ export default function RegisterPage() {
                             </label>
                             <input
                                 type="password"
-                                className="rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
+                                className={`rounded-[10px] border-[0.5px] ${
+                                    errors.password
+                                        ? "border-red-500"
+                                        : "border-black/15"
+                                } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
                                 name="password"
                                 id="password"
                                 value={form.password}
                                 onChange={handleChange}
+                                onBlur={() => handleBlur("password")}
                                 placeholder={
                                     dic?.auth.register.password_placeholder
                                 }
                             />
+                            {errors.password && (
+                                <p className="text-xs text-red-600 font-poppins-regular mt-1">
+                                    {errors.password}
+                                </p>
+                            )}
                         </div>
                         <div className="relative">
                             <label
@@ -314,33 +439,37 @@ export default function RegisterPage() {
                             </label>
                             <input
                                 type="password"
-                                className="rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
+                                className={`rounded-[10px] border-[0.5px] ${
+                                    errors.password_confirmation
+                                        ? "border-red-500"
+                                        : "border-black/15"
+                                } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
                                 name="password_confirmation"
                                 id="password_confirmation"
                                 value={form.password_confirmation}
                                 onChange={handleChange}
+                                onBlur={() =>
+                                    handleBlur("password_confirmation")
+                                }
                                 placeholder={
                                     dic?.auth.register
                                         .password_confirmation_placeholder
                                 }
                             />
+                            {errors.password_confirmation && (
+                                <p className="text-xs text-red-600 font-poppins-regular mt-1">
+                                    {errors.password_confirmation}
+                                </p>
+                            )}
                         </div>
                     </div>
 
-                    {error && (
-                        <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <p className="text-xs text-red-600 font-poppins-regular">
-                                {error}
-                            </p>
-                        </div>
-                    )}
-
                     <button
                         onClick={handleSubmit}
-                        disabled={loading}
-                        className="mt-8 py-4 w-full bg-tiny-pink text-center text-white text-sm font-semibold font-poppins-semi-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isLoading}
+                        className="cursor-pointer mt-8 py-4 w-full bg-tiny-pink text-center text-white text-sm font-semibold font-poppins-semi-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {loading
+                        {isLoading
                             ? "Signing Up..."
                             : dic?.auth.register.register}
                     </button>
@@ -355,7 +484,7 @@ export default function RegisterPage() {
                 </div>
                 <Link
                     href={`/${lang}/login`}
-                    className="cursor-pointer py-4 w-full border-[0.5px] border-tiny-pink rounded-2xl flex justify-center"
+                    className="cursor-pointer py-4 w-full border-[0.5px] border-tiny-pink rounded-2xl flex justify-center flex-wrap"
                 >
                     <span className="text-sm text-tiny-black font-poppins-regular font-normal">
                         {dic?.auth.register.have_acc}

@@ -1,19 +1,28 @@
 import Breadcrumb from "@/components/Breadcrumb";
 import Comment from "@/components/Comment";
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
+import CategoriesSlider from "@/components/landing/CategoriesSlider";
+import Faqs from "@/components/landing/Faqs";
+import Help from "@/components/landing/Help";
+import HowItWork from "@/components/landing/HowItWork";
+import Reviews from "@/components/landing/Reviews";
+import Slider from "@/components/landing/Slider";
+import TopSeller from "@/components/landing/TopSeller";
 import ProductDetails from "@/components/ProductDetails";
 import ProductImagesPreview from "@/components/ProductImagesPreview";
 import RatingAndReviews from "@/components/RatingAndReviews";
-import SectionName from "@/components/SectionName";
-import SimilarProducts from "@/components/SimilarProducts";
 
 export default function Home() {
     return (
         <>
-            <Navbar />
-            <SectionName secName="T-Shirt" />
-            <div className="container mx-auto px-5 py-4 grow">
+            <Slider />
+            <CategoriesSlider />
+            <TopSeller />
+            <HowItWork />
+            <Reviews />
+            <Help />
+            <Faqs />
+
+            {/* <div className="container mx-auto px-5 py-4 grow">
                 <Breadcrumb />
                 <section className="mt-4 flex flex-col gap-5  lg:flex-row ">
                     <ProductImagesPreview />
@@ -31,9 +40,7 @@ export default function Home() {
                         View More Comments
                     </button>
                 </div>
-
-                <SimilarProducts />
-            </div>
+            </div> */}
         </>
     );
 }
