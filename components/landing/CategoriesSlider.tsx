@@ -87,18 +87,20 @@ const CategoriesSlider = () => {
                 <Swiper
                     breakpoints={{
                         0: {
-                            slidesPerView: 2,
+                            slidesPerView: 2.5,
                             spaceBetween: 20,
                         },
                         640: {
-                            slidesPerView: 3,
+                            slidesPerView: 3.5,
+                            spaceBetween: 20,
                         },
                         768: {
-                            slidesPerView: 3,
+                            slidesPerView: 4.5,
+                            spaceBetween: 20,
                         },
                         1024: {
-                            slidesPerView: 7.5,
-                            spaceBetween: 10,
+                            slidesPerView: 7,
+                            spaceBetween: 20,
                         },
                     }}
                     navigation={{
@@ -115,7 +117,7 @@ const CategoriesSlider = () => {
                     {categories.map((category) => (
                         <SwiperSlide key={category.id} className="w-auto">
                             <div className="flex flex-col items-center gap-1">
-                                <div className="relative w-40 h-40 p-11 rounded-full bg-[#E6E6E64D]">
+                                <div className="relative w-36 h-36 p-11 rounded-full bg-[#E6E6E64D]">
                                     <Image
                                         src={"/icons/t-shirt.svg"}
                                         alt={category.name}

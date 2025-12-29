@@ -25,7 +25,7 @@ export const useAuth = () => {
 
             toast.success("Logged in successfully");
 
-            router.push(`/${lang}/dashboard`);
+            router.push(`/${lang}/profile`);
 
             return response;
         } catch (error: any) {
@@ -77,7 +77,7 @@ export const useAuth = () => {
 
             toast.success("Logged out successfully");
 
-            router.push(`/${lang}/login`);
+            router.push(`/${lang}`);
         } catch (error: any) {
             toast.error(error.message || "Logout failed");
             throw error;

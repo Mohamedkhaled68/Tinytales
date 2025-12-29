@@ -3,12 +3,12 @@
 import { useState, useRef, KeyboardEvent, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { apiRequest } from "@/lib/api";
-import { getTokenFromCookie } from "@/utils/helpers";
 import { FaAngleLeft } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { FaAngleRight } from "react-icons/fa6";
 import Link from "next/link";
 import { getDictionary } from "@/app/[lang]/dictionaries";
+import { getToken } from "@/lib/token";
 
 interface OtpFormParams {
     type?: "reset" | "verify";
@@ -92,7 +92,7 @@ export default function OtpForm({ type, setStep }: OtpFormParams) {
         setLoading(true);
         setError("");
 
-        const token = getTokenFromCookie();
+        const token = getToken();
 
         if (type === "reset") {
             try {

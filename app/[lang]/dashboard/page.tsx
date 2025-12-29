@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getTokenFromCookie } from "@/utils/helpers";
 import { apiRequest } from "@/lib/api";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import { getToken } from "@/lib/token";
 
 interface User {
+    id?: number;
     name: string;
     email: string;
     mobile: string;
@@ -16,41 +18,109 @@ interface User {
 export default function DashboardPage() {
     const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const token = getTokenFromCookie();
-        const userData = localStorage.getItem("user");
+        const fetchUserData = async () => {
+            try {
+                const token = getToken();
 
-        console.log(userData);
-        console.log(token);
+                if (!token) {
+                    router.push("/login");
+                    return;
+                }
 
-        if (!token || !userData) {
-            router.push("/auth/login");
-            return;
-        }
+                // Try to fetch user data from the API
+                const response = await apiRequest("/auth/user-data", {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
-        setUser(JSON.parse(userData));
+                if (response.status_code === 200 && response.data) {
+                    setUser(response.data);
+                    localStorage.setItem("user", JSON.stringify(response.data));
+                } else {
+                    const userData = localStorage.getItem("user");
+                    if (userData) {
+                        setUser(JSON.parse(userData));
+                    } else {
+                        throw new Error("No user data available");
+                    }
+                }
+            } catch (err: any) {
+                console.error("Error fetching user data:", err);
+
+                const userData = localStorage.getItem("user");
+                if (userData) {
+                    setUser(JSON.parse(userData));
+                } else {
+                    setError(err.message || "Failed to load user data");
+                    toast.error(
+                        err.message || "Session expired. Please log in again."
+                    );
+                    document.cookie =
+                        "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                    localStorage.removeItem("user");
+                    router.push("/login");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchUserData();
     }, [router]);
 
     const handleLogout = async () => {
-        const token = getTokenFromCookie();
-        localStorage.removeItem("user");
-        document.cookie =
-            "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        const token = getToken();
 
         try {
             await apiRequest("/auth/logout", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
             });
-            router.push("/");
         } catch (err: any) {
-            console.log(err.message);
+            console.error("Logout error:", err.message);
+        } finally {
+            // Clear local data regardless of API response
+            localStorage.removeItem("user");
+            document.cookie =
+                "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            router.push("/");
         }
     };
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-tiny-pink"></div>
+                    <p className="mt-4 text-gray-600">Loading...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center px-4">
+                <div className="text-center">
+                    <p className="text-red-600 mb-4">{error}</p>
+                    <Link
+                        href="/login"
+                        className="text-tiny-pink hover:underline"
+                    >
+                        Go to Login
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     if (!user) {
         return null;
