@@ -19,6 +19,13 @@ axiosInstance.interceptors.request.use(
             config.headers.Authorization = `Bearer ${token}`;
         }
 
+        // Get current language from URL path
+        if (typeof window !== "undefined") {
+            const lang = window.location.pathname.split("/")[1] || "en";
+
+            config.headers["X-Lang"] = lang;
+        }
+
         return config;
     },
     (error) => {

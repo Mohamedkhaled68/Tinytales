@@ -10,7 +10,9 @@
             "forgot_password": "Forgot Password ?",
             "or": "OR",
             "dont_have_acc": "I Don't Have Account",
-            "signup_now": ", Sign Up Now"
+            "signup_now": ", Sign Up Now",
+            "logging_in": "Logging in...",
+            "success_message": "Logged in Successfully!"
         },
         "register": {
             "header_message": "Please login to your account",
@@ -28,14 +30,18 @@
             "password_confirmation_placeholder": "Enter your Password here",
             "or": "OR",
             "have_acc": "I Have Account",
-            "login_now": ", login Now"
+            "login_now": ", login Now",
+            "registering": "Signing Up...",
+            "success_message": "Account Created Successfully!"
         },
         "forgot_password": {
             "heading": "Account Recovery",
             "description": "Please enter your email so we can send you the code.",
             "email": "Email",
             "email_placeholder": "Enter your Email here",
-            "send_code": "Send Code"
+            "send_code": "Send Code",
+            "sending": "Sending...",
+            "success_message": "Verification code has been sent to your email."
         },
         "create_new_password": {
             "heading": "Create New Password",
@@ -44,14 +50,21 @@
             "password_placeholder": "Enter your Password here",
             "password_confirmation": "Confirm Password",
             "password_confirmation_placeholder": "Enter your Password here",
-            "login": "Login"
+            "login": "Login",
+            "success_message": "Password updated successfully. You can now log in.",
+            "resetting": "Resetting Password..."
         },
         "verify": {
             "verify_id": "Verify your identity",
             "sent_message": "we sent 6-digit code to",
             "code_valid": "this code will be valid for (2) minutes.",
             "send_code": "Send Code",
-            "resend_code": "Resend Code"
+            "resend_code": "Resend Code",
+            "verifying": "Verifying...",
+            "resending": "Resending...",
+            "code_expired": "The code has expired. Please request a new one.",
+            "code_expires": "Code expires in",
+            "success_message": "Your identity has been verified successfully."
         },
         "validation": {
             "email_required": "Email is required",

@@ -1,25 +1,20 @@
 "use client";
 
 import { getDictionary } from "@/app/[lang]/dictionaries";
-import { apiRequest } from "@/lib/api";
-import { useParams, useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import toast from "react-hot-toast";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
-interface CreateNewPasswordProps {
-    setStep: React.Dispatch<React.SetStateAction<string>>;
-}
-
-const CreateNewPassword = ({ setStep }: CreateNewPasswordProps) => {
+const CreateNewPassword = () => {
     const { lang } = useParams<{ lang: "en" | "ar" }>();
-    const router = useRouter();
+    const { resetPassword, isLoading } = useAuth();
     const [dic, setDic] = useState<any>(null);
     const [form, setForm] = useState({
         password: "",
         password_confirmation: "",
     });
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [errors, setErrors] = useState<{
         password?: string;
@@ -98,36 +93,34 @@ const CreateNewPassword = ({ setStep }: CreateNewPasswordProps) => {
             return;
         }
 
-        setLoading(true);
         setError("");
         setErrors({});
 
         try {
             const otp = localStorage.getItem("otp");
-            const email = localStorage.getItem("email_recovery");
-            const res = await apiRequest("/forget-password/reset-password", {
-                method: "POST",
-                body: JSON.stringify({
+            const email = localStorage.getItem("user_email");
+
+            if (!email || !otp) {
+                setError("Session expired. Please start over.");
+                return;
+            }
+
+            await resetPassword(
+                {
                     email,
                     otp,
                     password: form.password,
                     password_confirmation: form.password_confirmation,
-                }),
-                headers: {
-                    "Content-Type": "application/json",
                 },
-            });
+                lang
+            );
 
-            toast.success("Password reset successfully");
+            toast.success(dic?.auth.create_new_password.success_message);
 
             localStorage.removeItem("otp");
-            localStorage.removeItem("email_recovery");
-
-            router.push(`/${lang}/login`);
+            localStorage.removeItem("user_email");
         } catch (err: any) {
-            toast.error(err.message || "Failed to reset password");
-        } finally {
-            setLoading(false);
+            // Error already handled by useAuth
         }
     };
 
@@ -140,10 +133,7 @@ const CreateNewPassword = ({ setStep }: CreateNewPasswordProps) => {
             <div className="flex flex-col">
                 <div className="flex flex-col items-center gap-2">
                     <div className="flex justify-start items-start w-full">
-                        <button
-                            onClick={() => setStep("email")}
-                            className="cursor-pointer rounded-xl flex justify-center items-center border border-[#0000001A] p-2 hover:bg-gray-50 transition-colors"
-                        >
+                        <button className="cursor-pointer rounded-xl flex justify-center items-center border border-[#0000001A] p-2 hover:bg-gray-50 transition-colors">
                             {lang === "ar" ? <FaAngleRight /> : <FaAngleLeft />}
                         </button>
                     </div>
@@ -157,7 +147,13 @@ const CreateNewPassword = ({ setStep }: CreateNewPasswordProps) => {
                     </div>
                 </div>
 
-                <div className="flex flex-col mt-4 gap-8">
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSubmit();
+                    }}
+                    className="flex flex-col mt-4 gap-8"
+                >
                     <div className="relative">
                         <label
                             htmlFor="password"
@@ -179,7 +175,7 @@ const CreateNewPassword = ({ setStep }: CreateNewPasswordProps) => {
                             value={form.password}
                             onChange={handleChange}
                             onBlur={() => handleBlur("password")}
-                            disabled={loading}
+                            disabled={isLoading}
                             placeholder={
                                 dic?.auth.create_new_password
                                     .password_placeholder
@@ -215,7 +211,7 @@ const CreateNewPassword = ({ setStep }: CreateNewPasswordProps) => {
                             value={form.password_confirmation}
                             onChange={handleChange}
                             onBlur={() => handleBlur("password_confirmation")}
-                            disabled={loading}
+                            disabled={isLoading}
                             placeholder={
                                 dic?.auth.create_new_password
                                     .password_confirmation_placeholder
@@ -238,15 +234,16 @@ const CreateNewPassword = ({ setStep }: CreateNewPasswordProps) => {
                     )}
 
                     <button
-                        onClick={handleSubmit}
-                        disabled={loading}
+                        type="submit"
+                        disabled={isLoading}
                         className="mt-3 py-4 w-full bg-tiny-pink text-center text-white text-sm font-semibold font-poppins-semi-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-opacity-90 transition-all"
                     >
-                        {loading
-                            ? "Resetting..."
+                        {isLoading
+                            ? dic?.auth.create_new_password.resetting ||
+                              "Resetting..."
                             : dic?.auth.create_new_password.login}
                     </button>
-                </div>
+                </form>
             </div>
         </div>
     );

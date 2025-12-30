@@ -1,24 +1,21 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import Link from "next/link";
 import { getDictionary } from "@/app/[lang]/dictionaries";
-import { apiRequest } from "@/lib/api";
+import { useAuth } from "@/hooks/useAuth";
 import toast from "react-hot-toast";
 
-interface AccountRecoveryFormProps {
-    setStep: React.Dispatch<React.SetStateAction<string>>;
-}
-
-const AccountRecoveryForm = ({ setStep }: AccountRecoveryFormProps) => {
+const AccountRecoveryForm = () => {
     const [dic, setDic] = useState<any>(null);
     const [email, setEmail] = useState("");
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [emailError, setEmailError] = useState("");
+    const router = useRouter();
 
     const { lang } = useParams<{ lang: "en" | "ar" }>();
+    const { checkEmailForReset, isLoading } = useAuth();
 
     const getDic = async () => {
         const dictionary = await getDictionary(lang);
@@ -54,26 +51,16 @@ const AccountRecoveryForm = ({ setStep }: AccountRecoveryFormProps) => {
             return;
         }
 
-        setLoading(true);
         setEmailError("");
 
         try {
-            const res = await apiRequest("/forget-password/check-email", {
-                method: "POST",
-                body: JSON.stringify({ email }),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
-            localStorage.setItem("email_recovery", email);
-            toast.success("Email Sent successfully");
-
-            setStep("otp");
+            await checkEmailForReset(email);
+            toast.success(dic?.auth.forgot_password.success_message);
+            localStorage.setItem("user_email", email);
+            localStorage.setItem("otp_status", "reset");
+            router.push(`/${lang}/verify/verify-reset-password`);
         } catch (err: any) {
-            toast.error(err.message);
-        } finally {
-            setLoading(false);
+            // Error already handled by useAuth
         }
     };
 
@@ -103,7 +90,13 @@ const AccountRecoveryForm = ({ setStep }: AccountRecoveryFormProps) => {
                     </div>
                 </div>
 
-                <div className="flex flex-col mt-4">
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSubmit();
+                    }}
+                    className="flex flex-col mt-4"
+                >
                     <div className="relative">
                         <label
                             htmlFor="email"
@@ -128,7 +121,7 @@ const AccountRecoveryForm = ({ setStep }: AccountRecoveryFormProps) => {
                             placeholder={
                                 dic?.auth.forgot_password.email_placeholder
                             }
-                            disabled={loading}
+                            disabled={isLoading}
                         />
                         {emailError && (
                             <p className="text-xs text-red-600 font-poppins-regular mt-1">
@@ -146,15 +139,15 @@ const AccountRecoveryForm = ({ setStep }: AccountRecoveryFormProps) => {
                     )}
 
                     <button
-                        onClick={handleSubmit}
-                        disabled={loading}
+                        type="submit"
+                        disabled={isLoading}
                         className="mt-3 py-4 w-full bg-tiny-pink text-center text-white text-sm font-semibold font-poppins-semi-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-opacity-90 transition-all"
                     >
-                        {loading
-                            ? "Sending..."
+                        {isLoading
+                            ? dic?.auth.forgot_password.sending
                             : dic?.auth.forgot_password.send_code}
                     </button>
-                </div>
+                </form>
             </div>
         </div>
     );

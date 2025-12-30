@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getDictionary } from "../../dictionaries";
 import { useAuth } from "@/hooks/useAuth";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -86,8 +87,9 @@ export default function LoginPage() {
 
         try {
             await loginUser(email, password, lang);
+            toast.success(dic?.auth.login.success_message);
         } catch (err: any) {
-            console.error("Login error:", err);
+            console.log("Login error:", err.message);
         }
     };
 
@@ -103,7 +105,7 @@ export default function LoginPage() {
                     </p>
                 </div>
 
-                <div className="flex flex-col mt-4">
+                <form onSubmit={handleLogin} className="flex flex-col mt-4">
                     <div className="relative">
                         <label
                             htmlFor="email"
@@ -175,13 +177,15 @@ export default function LoginPage() {
                     </Link>
 
                     <button
-                        onClick={handleLogin}
+                        type="submit"
                         disabled={isLoading}
                         className="cursor-pointer mt-3 py-4 w-full bg-tiny-pink text-center text-white text-sm font-semibold font-poppins-semi-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-opacity-90 transition-all"
                     >
-                        {isLoading ? "Loading..." : dic?.auth.login.login}
+                        {isLoading
+                            ? dic?.auth.login.logging_in
+                            : dic?.auth.login.login}
                     </button>
-                </div>
+                </form>
 
                 <div className="flex items-center my-2">
                     <div className="h-0.5 w-full bg-[#ECECEC] rounded-2xl" />

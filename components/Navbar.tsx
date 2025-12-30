@@ -27,6 +27,7 @@ const Navbar = () => {
     const [showLanguagePage, setShowLanguagePage] = useState(false);
     const [showProfilePage, setShowProfilePage] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+    const [showProfileDropdown, setShowProfileDropdown] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState<{
         code: "en" | "ar";
         name: string;
@@ -86,31 +87,36 @@ const Navbar = () => {
             icon: (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="18"
-                    viewBox="0 0 16 18"
+                    width="20px"
+                    height="20px"
+                    viewBox="0 0 24 24"
                     fill="none"
                 >
                     <path
-                        d="M15 13.3904V7.20235C15 6.24367 14.5728 5.33573 13.8364 4.72933L9.87803 1.4699C8.71234 0.510033 7.03766 0.510035 5.87197 1.4699L1.91364 4.72933C1.17722 5.33573 0.75 6.24367 0.75 7.20235V13.3904C0.75 15.1538 2.16776 16.5833 3.91667 16.5833H11.8333C13.5822 16.5833 15 15.1538 15 13.3904Z"
+                        d="M2 12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274C22 8.77128 22 9.91549 22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039Z"
                         stroke="#8A8A8A"
                         strokeWidth="1.5"
-                        strokeLinejoin="round"
+                    />
+                    <path
+                        d="M15 18H9"
+                        stroke="#8A8A8A"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
                     />
                 </svg>
             ),
             activeIcon: (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="20"
-                    viewBox="0 0 18 20"
+                    width="20px"
+                    height="20px"
+                    viewBox="0 0 24 24"
                     fill="none"
                 >
                     <path
                         fillRule="evenodd"
                         clipRule="evenodd"
-                        d="M18 8.15033V15.9668C18 18.1943 16.2091 20 14 20H4C1.79086 20 0 18.1943 0 15.9668V8.15033C0 6.93937 0.539645 5.7925 1.46986 5.02652L6.46986 0.909348C7.9423 -0.303114 10.0577 -0.303117 11.5301 0.909345L16.5301 5.02652C17.4604 5.7925 18 6.93937 18 8.15033ZM7 15.25C6.58579 15.25 6.25 15.5858 6.25 16C6.25 16.4142 6.58579 16.75 7 16.75H11C11.4142 16.75 11.75 16.4142 11.75 16C11.75 15.5858 11.4142 15.25 11 15.25H7Z"
+                        d="M2.5192 7.82274C2 8.77128 2 9.91549 2 12.2039V13.725C2 17.6258 2 19.5763 3.17157 20.7881C4.34315 22 6.22876 22 10 22H14C17.7712 22 19.6569 22 20.8284 20.7881C22 19.5763 22 17.6258 22 13.725V12.2039C22 9.91549 22 8.77128 21.4808 7.82274C20.9616 6.87421 20.0131 6.28551 18.116 5.10812L16.116 3.86687C14.1106 2.62229 13.1079 2 12 2C10.8921 2 9.88939 2.62229 7.88403 3.86687L5.88403 5.10813C3.98695 6.28551 3.0384 6.87421 2.5192 7.82274ZM9 17.25C8.58579 17.25 8.25 17.5858 8.25 18C8.25 18.4142 8.58579 18.75 9 18.75H15C15.4142 18.75 15.75 18.4142 15.75 18C15.75 17.5858 15.4142 17.25 15 17.25H9Z"
                         fill="#BE968E"
                     />
                 </svg>
@@ -122,28 +128,28 @@ const Navbar = () => {
             icon: (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="22"
-                    height="22"
-                    viewBox="0 0 22 22"
+                    width="19"
+                    height="19"
+                    viewBox="0 0 19 19"
                     fill="none"
                 >
                     <path
-                        d="M0.75 2.75C0.75 1.64543 1.64543 0.75 2.75 0.75H6.75C7.85457 0.75 8.75 1.64543 8.75 2.75V6.75C8.75 7.85457 7.85457 8.75 6.75 8.75H2.75C1.64543 8.75 0.75 7.85457 0.75 6.75V2.75Z"
+                        d="M0.75 2.41667C0.75 1.49619 1.49619 0.75 2.41667 0.75H5.75C6.67047 0.75 7.41667 1.49619 7.41667 2.41667V5.75C7.41667 6.67047 6.67047 7.41667 5.75 7.41667H2.41667C1.49619 7.41667 0.75 6.67047 0.75 5.75V2.41667Z"
                         stroke="#8A8A8A"
                         strokeWidth="1.5"
                     />
                     <path
-                        d="M20.75 4.75C20.75 6.95914 18.9591 8.75 16.75 8.75C14.5409 8.75 12.75 6.95914 12.75 4.75C12.75 2.54086 14.5409 0.75 16.75 0.75C18.9591 0.75 20.75 2.54086 20.75 4.75Z"
+                        d="M17.4167 4.08333C17.4167 5.92428 15.9243 7.41667 14.0833 7.41667C12.2424 7.41667 10.75 5.92428 10.75 4.08333C10.75 2.24238 12.2424 0.75 14.0833 0.75C15.9243 0.75 17.4167 2.24238 17.4167 4.08333Z"
                         stroke="#8A8A8A"
                         strokeWidth="1.5"
                     />
                     <path
-                        d="M8.75 16.75C8.75 18.9591 6.95914 20.75 4.75 20.75C2.54086 20.75 0.75 18.9591 0.75 16.75C0.75 14.5409 2.54086 12.75 4.75 12.75C6.95914 12.75 8.75 14.5409 8.75 16.75Z"
+                        d="M7.41667 14.0833C7.41667 15.9243 5.92428 17.4167 4.08333 17.4167C2.24238 17.4167 0.75 15.9243 0.75 14.0833C0.75 12.2424 2.24238 10.75 4.08333 10.75C5.92428 10.75 7.41667 12.2424 7.41667 14.0833Z"
                         stroke="#8A8A8A"
                         strokeWidth="1.5"
                     />
                     <path
-                        d="M12.75 14.75C12.75 13.6454 13.6454 12.75 14.75 12.75H18.75C19.8546 12.75 20.75 13.6454 20.75 14.75V18.75C20.75 19.8546 19.8546 20.75 18.75 20.75H14.75C13.6454 20.75 12.75 19.8546 12.75 18.75V14.75Z"
+                        d="M10.75 12.4167C10.75 11.4962 11.4962 10.75 12.4167 10.75H15.75C16.6705 10.75 17.4167 11.4962 17.4167 12.4167V15.75C17.4167 16.6705 16.6705 17.4167 15.75 17.4167H12.4167C11.4962 17.4167 10.75 16.6705 10.75 15.75V12.4167Z"
                         stroke="#8A8A8A"
                         strokeWidth="1.5"
                     />
@@ -170,13 +176,13 @@ const Navbar = () => {
             icon: (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="22"
-                    height="22"
-                    viewBox="0 0 22 22"
+                    width="19"
+                    height="19"
+                    viewBox="0 0 19 19"
                     fill="none"
                 >
                     <path
-                        d="M15.3879 8.8783C14.647 7.04416 12.8496 5.75 10.75 5.75C7.98857 5.75 5.75 7.98857 5.75 10.75C5.75 12.8496 7.04416 14.647 8.8783 15.3879M10.6656 20.7496C5.18159 20.7043 0.75 16.2447 0.75 10.75C0.75 5.22715 5.22715 0.75 10.75 0.75C16.2447 0.75 20.7043 5.18159 20.7496 10.6656M10.8073 12.1735L13.4199 20.0114C13.7482 20.9962 15.1411 20.9962 15.4693 20.0114L16.4341 17.1172C16.5416 16.7946 16.7946 16.5416 17.1172 16.4341L20.0114 15.4693C20.9962 15.1411 20.9962 13.7482 20.0114 13.4199L12.1735 10.8073C11.3292 10.5258 10.5258 11.3292 10.8073 12.1735Z"
+                        d="M12.9482 7.52359C12.3308 5.99513 10.833 4.91667 9.08333 4.91667C6.78215 4.91667 4.91667 6.78215 4.91667 9.08333C4.91667 10.833 5.99513 12.3308 7.52359 12.9482M9.01296 17.4164C4.44299 17.3786 0.75 13.6622 0.75 9.08333C0.75 4.48096 4.48096 0.75 9.08333 0.75C13.6622 0.75 17.3786 4.44299 17.4164 9.01296M9.13108 10.2696L11.3083 16.8012C11.5818 17.6218 12.7425 17.6218 13.0161 16.8012L13.82 14.3893C13.9096 14.1205 14.1205 13.9096 14.3893 13.82L16.8012 13.0161C17.6218 12.7425 17.6218 11.5818 16.8012 11.3083L10.2696 9.13108C9.56596 8.89653 8.89653 9.56596 9.13108 10.2696Z"
                         stroke="#8A8A8A"
                         strokeWidth="1.5"
                         strokeLinecap="round"
@@ -222,8 +228,8 @@ const Navbar = () => {
             activeIcon: (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="17"
-                    height="15"
+                    width="19"
+                    height="17"
                     viewBox="0 0 17 15"
                     fill="none"
                 >
@@ -237,7 +243,7 @@ const Navbar = () => {
             ),
         },
         {
-            href: `/${lang}/faqs`,
+            href: `/${lang}/FAQs`,
             label: "FAQs",
             icon: (
                 <svg
@@ -490,10 +496,21 @@ const Navbar = () => {
                             <Link
                                 key={index}
                                 href={link.href}
-                                className={`transition duration-200 text-sm font-normal font-poppins-regular`}
+                                className={`transition duration-200 flex gap-1.5`}
                             >
                                 {isActive ? link.activeIcon : link.icon}
-                                {link.label}
+                                <span
+                                    className={`relative ${
+                                        isActive
+                                            ? "text-tiny-pink text-sm font-semibold font-poppins-semi-bold"
+                                            : "text-tiny-black-200 text-sm font-normal font-poppins-regular"
+                                    }`}
+                                >
+                                    {link.label}
+                                    {isActive && (
+                                        <span className="absolute -bottom-1 left-0 w-7 h-0.5 bg-tiny-pink rounded-lg" />
+                                    )}
+                                </span>
                             </Link>
                         );
                     })}
@@ -537,28 +554,133 @@ const Navbar = () => {
                                 />
                             </button>
                             <LanguageSelector />
-                            <Link
-                                href={`/${lang}/profile`}
-                                className="cursor-pointer flex items-center gap-1 px-3 py-2 rounded-full hover:bg-gray-100 transition duration-200"
-                            >
-                                <MdOutlineAccountCircle
-                                    size={24}
-                                    className="text-tiny-black"
-                                />
-                                <svg
-                                    className="w-4 h-4 text-tiny-black"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
+                            <div className="relative">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                                    className="cursor-pointer flex items-center gap-1 px-3 py-2 rounded-full hover:bg-gray-100 transition duration-200"
                                 >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M19 9l-7 7-7-7"
+                                    <MdOutlineAccountCircle
+                                        size={24}
+                                        className="text-tiny-black"
                                     />
-                                </svg>
-                            </Link>
+                                    <svg
+                                        className={`w-4 h-4 text-tiny-black transition-transform ${
+                                            showProfileDropdown ? "rotate-180" : ""
+                                        }`}
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M19 9l-7 7-7-7"
+                                        />
+                                    </svg>
+                                </button>
+
+                                {/* Profile Dropdown */}
+                                {showProfileDropdown && (
+                                    <>
+                                        <div
+                                            className="fixed inset-0 z-10"
+                                            onClick={() => setShowProfileDropdown(false)}
+                                        />
+                                        <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-black/15 rounded-lg shadow-lg z-20 overflow-hidden">
+                                            {menuProfileLinks.map((link, index) => {
+                                                const isActive = pathname === link.href;
+                                                return (
+                                                    <Link
+                                                        key={index}
+                                                        href={link.href}
+                                                        onClick={() => setShowProfileDropdown(false)}
+                                                        className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-poppins-medium transition-colors hover:bg-gray-50"
+                                                    >
+                                                        {isActive ? link.activeIcon : link.icon}
+                                                        <span
+                                                            className={`${
+                                                                isActive
+                                                                    ? "text-tiny-pink"
+                                                                    : "text-tiny-black-200"
+                                                            }`}
+                                                        >
+                                                            {link.label}
+                                                        </span>
+                                                    </Link>
+                                                );
+                                            })}
+                                            <div className="border-t border-gray-200">
+                                                <button
+                                                    onClick={() => {
+                                                        setShowProfileDropdown(false);
+                                                        setShowLogoutConfirm(true);
+                                                    }}
+                                                    className="flex items-center gap-3 px-4 py-3 w-full text-sm font-medium font-poppins-medium text-[#D90202] hover:bg-red-50 transition-colors"
+                                                >
+                                                    <svg
+                                                        className="w-5 h-5"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                                                        />
+                                                    </svg>
+                                                    <span>Logout</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Desktop Logout Confirmation Popup */}
+                            {showLogoutConfirm && (
+                                <>
+                                    <div
+                                        className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4"
+                                        onClick={() => setShowLogoutConfirm(false)}
+                                    >
+                                        <div
+                                            className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <div className="text-center mb-6">
+                                                <div className="w-15 h-15 relative mx-auto">
+                                                    <Image
+                                                        src={"/icons/logout.svg"}
+                                                        alt="logout-icon"
+                                                        fill
+                                                    />
+                                                </div>
+                                                <h3 className="text-[20px] font-poppins-semibold font-semibold text-tiny-black mb-2 mt-2">
+                                                    Are you sure you want to Log Out?
+                                                </h3>
+                                            </div>
+                                            <div className="flex gap-3">
+                                                <button
+                                                    onClick={handleLogout}
+                                                    className="flex-1 px-4 py-2.5 bg-[#D90202] text-white font-poppins-medium rounded-lg transition duration-200"
+                                                >
+                                                    Logout
+                                                </button>
+                                                <button
+                                                    onClick={() => setShowLogoutConfirm(false)}
+                                                    className="flex-1 px-4 py-2.5 text-[#D90202] border border-[#D90202] font-poppins-medium rounded-lg transition duration-200"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </>
                 ) : (

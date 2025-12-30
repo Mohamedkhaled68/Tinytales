@@ -23,8 +23,6 @@ export const useAuth = () => {
 
             login(response.data as any);
 
-            toast.success("Logged in successfully");
-
             router.push(`/${lang}/profile`);
 
             return response;
@@ -56,9 +54,7 @@ export const useAuth = () => {
 
             login(response.data as any);
 
-            toast.success(response.message || "Account created successfully");
-
-            router.push(`/${lang}/verify`);
+            router.push(`/${lang}/verify/verify-user-email`);
 
             return response;
         } catch (error: any) {
@@ -75,8 +71,6 @@ export const useAuth = () => {
 
             logout();
 
-            toast.success("Logged out successfully");
-
             router.push(`/${lang}`);
         } catch (error: any) {
             toast.error(error.message || "Logout failed");
@@ -90,13 +84,81 @@ export const useAuth = () => {
 
             const response = await authService.verifyEmail(code);
 
-            toast.success("Email verified successfully");
-
             router.push(`/${lang}/login`);
 
             return response;
         } catch (error: any) {
             toast.error(error.message || "Verification failed");
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const resendVerificationCode = async () => {
+        try {
+            setLoading(true);
+
+            const response = await authService.resendVerificationCode();
+
+            return response;
+        } catch (error: any) {
+            toast.error(error.message);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const checkEmailForReset = async (email: string) => {
+        try {
+            setLoading(true);
+
+            const response = await authService.checkEmailForReset(email);
+
+            return response;
+        } catch (error: any) {
+            toast.error(error.message || "Failed to send verification code");
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const verifyResetOTP = async (email: string, otp: string) => {
+        try {
+            setLoading(true);
+
+            const response = await authService.verifyResetOTP(email, otp);
+
+            return response;
+        } catch (error: any) {
+            toast.error(error.message || "Invalid verification code");
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const resetPassword = async (
+        resetData: {
+            email: string;
+            otp: string;
+            password: string;
+            password_confirmation: string;
+        },
+        lang: string = "en"
+    ) => {
+        try {
+            setLoading(true);
+
+            const response = await authService.resetPassword(resetData);
+
+            router.push(`/${lang}/login`);
+
+            return response;
+        } catch (error: any) {
+            toast.error(error.message || "Failed to reset password");
             throw error;
         } finally {
             setLoading(false);
@@ -112,5 +174,9 @@ export const useAuth = () => {
         registerUser,
         logoutUser,
         verifyUserEmail,
+        resendVerificationCode,
+        checkEmailForReset,
+        verifyResetOTP,
+        resetPassword,
     };
 };

@@ -185,11 +185,12 @@ export default function RegisterPage() {
 
         try {
             await registerUser(form, lang);
+            localStorage.setItem("user_email", form.email);
+            toast.success(dic?.auth.register.success_message);
         } catch (err: any) {
-            toast.error("Registration error:", err);
+            // Error already handled by useAuth}
         }
     };
-
     return (
         <div className="bg-white z-10 w-full md:w-120 mx-auto rounded-[40px] p-6 shadow-[0_0_140px_-56px_rgba(0,0,0,0.25)]">
             <div className="flex flex-col">
@@ -202,7 +203,7 @@ export default function RegisterPage() {
                     </p>
                 </div>
 
-                <div className="flex flex-col mt-4">
+                <form onSubmit={handleSubmit} className="flex flex-col mt-4">
                     <div className="flex flex-col gap-8">
                         <div className="relative">
                             <label
@@ -334,7 +335,7 @@ export default function RegisterPage() {
                                                     )
                                                 }
                                             />
-                                            <div className="absolute top-full left-0 mt-1 w-72 max-h-60 overflow-y-auto bg-white border border-black/15 rounded-lg shadow-lg z-20">
+                                            <div className={`absolute top-full ${lang === "ar" ? "right-0" : "left-0"} mt-1 w-72 max-h-60 overflow-y-auto bg-white border border-black/15 rounded-lg shadow-lg z-20`}>
                                                 {countriesData.map(
                                                     (country: any) => (
                                                         <button
@@ -465,15 +466,15 @@ export default function RegisterPage() {
                     </div>
 
                     <button
-                        onClick={handleSubmit}
+                        type="submit"
                         disabled={isLoading}
                         className="cursor-pointer mt-8 py-4 w-full bg-tiny-pink text-center text-white text-sm font-semibold font-poppins-semi-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isLoading
-                            ? "Signing Up..."
+                            ? dic?.auth.register.registering
                             : dic?.auth.register.register}
                     </button>
-                </div>
+                </form>
 
                 <div className="flex items-center my-2">
                     <div className="h-0.5 w-full bg-[#ECECEC] rounded-2xl" />
