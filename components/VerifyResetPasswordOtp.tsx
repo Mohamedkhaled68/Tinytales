@@ -7,6 +7,7 @@ import { FaAngleLeft } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { FaAngleRight } from "react-icons/fa6";
 import { getDictionary } from "@/app/[lang]/dictionaries";
+import Link from "next/link";
 
 export default function VerifyResetPasswordOtp() {
     const router = useRouter();
@@ -184,9 +185,12 @@ export default function VerifyResetPasswordOtp() {
             <div className="flex flex-col">
                 <div className="flex flex-col items-center gap-2">
                     <div className="flex justify-start items-start w-full">
-                        <button className="cursor-pointer rounded-xl flex justify-center items-center border border-[#0000001A] p-2 hover:bg-gray-50 transition-colors">
+                        <Link
+                            href={`/${lang}/forgot-password/account-recovery`}
+                            className="cursor-pointer rounded-xl flex justify-center items-center border border-[#0000001A] p-2 hover:bg-gray-50 transition-colors"
+                        >
                             {lang === "ar" ? <FaAngleRight /> : <FaAngleLeft />}
-                        </button>
+                        </Link>
                     </div>
                     <h1 className="text-[16px] lg:text-2xl font-medium font-poppins-medium text-tiny-black">
                         {dic?.auth.verify.verify_id}
