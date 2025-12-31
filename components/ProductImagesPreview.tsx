@@ -14,6 +14,7 @@ import "swiper/css/pagination";
 // import required modules
 import { FreeMode, Navigation, Thumbs, Pagination } from "swiper/modules";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const productImages = [
     "/images/main-item.webp",
@@ -26,6 +27,7 @@ export default function ProductImagesPreview() {
     const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
     const [isBeginning, setIsBeginning] = useState(true);
     const [isEnd, setIsEnd] = useState(false);
+    const { lang } = useLanguage();
 
     return (
         <div className="w-full lg:w-130 flex flex-col relative">
@@ -59,20 +61,36 @@ export default function ProductImagesPreview() {
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                <div className="absolute w-full flex justify-between items-center top-[50%] -translate-y-1/2 z-10 px-2">
+                <div
+                    className={`absolute w-full flex justify-between items-center top-[50%] -translate-y-1/2 z-10 px-2 ${
+                        lang === "ar" ? "" : ""
+                    }`}
+                >
                     <button
                         className="swiper-button-prev disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer w-8 h-8 rounded-full bg-tiny-pink flex justify-center items-center text-white"
-                        aria-label="Previous slide"
-                        disabled={isBeginning}
+                        aria-label={
+                            lang === "ar" ? "Next slide" : "Previous slide"
+                        }
+                        disabled={lang === "ar" ? isEnd : isBeginning}
                     >
-                        <FaAngleLeft size={13} />
+                        {lang === "ar" ? (
+                            <FaAngleRight size={13} />
+                        ) : (
+                            <FaAngleLeft size={13} />
+                        )}
                     </button>
                     <button
                         className="swiper-button-next disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer w-8 h-8 rounded-full bg-tiny-pink flex justify-center items-center text-white"
-                        aria-label="Next slide"
-                        disabled={isEnd}
+                        aria-label={
+                            lang === "ar" ? "Previous slide" : "Next slide"
+                        }
+                        disabled={lang === "ar" ? isBeginning : isEnd}
                     >
-                        <FaAngleRight size={13} />
+                        {lang === "ar" ? (
+                            <FaAngleLeft size={13} />
+                        ) : (
+                            <FaAngleRight size={13} />
+                        )}
                     </button>
                 </div>
             </div>

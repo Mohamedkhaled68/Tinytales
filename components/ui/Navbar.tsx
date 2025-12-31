@@ -11,7 +11,7 @@ import { MdOutlineAccountCircle } from "react-icons/md";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { getToken } from "@/lib/token";
@@ -23,6 +23,7 @@ const Navbar = () => {
     const { lang } = useLanguage();
     const router = useRouter();
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const [isLoading, setIsLoading] = useState(false);
     const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
     const [showLanguagePage, setShowLanguagePage] = useState(false);
@@ -72,7 +73,9 @@ const Navbar = () => {
         setIsLoading(true);
 
         const newPath = pathname.replace(`/${lang}`, `/${language.code}`);
-        router.push(newPath);
+        const queryString = searchParams.toString();
+        const fullPath = queryString ? `${newPath}?${queryString}` : newPath;
+        router.push(fullPath);
     };
 
     const toggleMenu = () => {
@@ -475,7 +478,7 @@ const Navbar = () => {
                                 type="button"
                                 onClick={() => handleLanguageSelect(language)}
                                 disabled={isLoading}
-                                className={`w-full text-left px-4 py-2.5 text-sm font-medium font-poppins-medium transition-colors disabled:cursor-not-allowed ${
+                                className={`cursor-pointer w-full text-left px-4 py-2.5 text-sm font-medium font-poppins-medium transition-colors disabled:cursor-not-allowed ${
                                     selectedLanguage.code === language.code
                                         ? "bg-tiny-pink text-white"
                                         : "text-tiny-black hover:bg-gray-50"

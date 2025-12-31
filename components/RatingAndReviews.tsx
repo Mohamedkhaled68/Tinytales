@@ -1,13 +1,15 @@
 import Image from "next/image";
 import RatingBar from "./RatingBar";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-const RatingAndReviews = () => {
+const RatingAndReviews = ({ rates }: { rates: any }) => {
+    const { lang } = useLanguage();
     return (
         <>
             <div className="flex flex-col gap-0.5">
                 <div className="relative w-fit">
                     <h1 className="font-poppins-semi-bold font-semibold text-[16px] text-tiny-black">
-                        Rating & Reviews
+                        {lang === "ar" ? "التقييمات والمراجعات" : "Ratings & Reviews"}
                     </h1>
                     <Image
                         src={"/images/heading-logo.svg"}
@@ -24,7 +26,7 @@ const RatingAndReviews = () => {
             <div className="flex flex-col items-center justify-center lg:flex-row lg:gap-20">
                 <div className="mt-5 flex items-baseline gap-5">
                     <span className="text-[80px] font-medium font-poppins-medium text-tiny-black">
-                        4,5
+                        {rates?.avg}
                     </span>
                     <span className="text-2xl font-medium font-poppins-medium text-tiny-black-100">
                         /5
@@ -32,23 +34,52 @@ const RatingAndReviews = () => {
                 </div>
 
                 <div className="flex flex-col gap-2 w-full mt-2">
-                    <RatingBar rating={"5"} percentage={"67"} />
-                    <RatingBar rating={"4"} percentage={"15"} />
-                    <RatingBar rating={"3"} percentage={"6"} />
-                    <RatingBar rating={"2"} percentage={"3"} />
-                    <RatingBar rating={"1"} percentage={"9"} />
+                    <RatingBar
+                        rating={Math.round(
+                            (rates?.["5_star"] / 100) * 5
+                        ).toString()}
+                        percentage={Math.round(
+                            rates?.["5_star"] || 0
+                        ).toString()}
+                    />
+                    <RatingBar
+                        rating="4"
+                        percentage={Math.round(
+                            rates?.["4_star"] || 0
+                        ).toString()}
+                    />
+                    <RatingBar
+                        rating="3"
+                        percentage={Math.round(
+                            rates?.["3_star"] || 0
+                        ).toString()}
+                    />
+                    <RatingBar
+                        rating="2"
+                        percentage={Math.round(
+                            rates?.["2_star"] || 0
+                        ).toString()}
+                    />
+                    <RatingBar
+                        rating="1"
+                        percentage={Math.round(
+                            rates?.["1_star"] || 0
+                        ).toString()}
+                    />
                 </div>
 
                 <div className="hidden lg:flex flex-col items-center w-full">
                     <p className="text-[16px] font-normal font-poppins-regular text-tiny-black-300">
-                        Total Reviews
+                        {lang === "ar" ? "إجمالي التقييمات" : "Total Reviews"}
                     </p>
                     <span className="text-6xl font-poppins-semi-bold font-semibold text-tiny-black">
-                        3.0k
+                        {rates?.total_rates}
                     </span>
-                    <button className="cursor-pointer mt-4 rounded-xl px-8 py-4 bg-tiny-pink font-poppins-medium font-medium text-[16px] text-white">
-                        Add Comment
-                    </button>
+                    {rates?.can_review_product && (
+                        <button className="cursor-pointer mt-4 rounded-xl px-8 py-4 bg-tiny-pink font-poppins-medium font-medium text-[16px] text-white">
+                            {lang === "ar" ? "أضف مراجعة" : "Add Review"}
+                        </button>
+                    )}
                 </div>
             </div>
         </>

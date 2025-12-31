@@ -34,8 +34,6 @@ export const useGetProducts = (categoryId: string) => {
                 categories_ids: [categoryId],
             });
 
-            console.log(response);
-
             setProducts(response.data.products.data || []);
             setMeta(response.data.products.meta || null);
             setLinks(response.data.products.links || null);

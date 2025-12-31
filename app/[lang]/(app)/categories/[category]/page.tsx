@@ -11,7 +11,6 @@ const page = () => {
     const [currentPage, setCurrentPage] = useState("1");
     const searchParams = useSearchParams();
     const { category } = useParams();
-    console.log(category);
 
     const router = useRouter();
     const categoryId = searchParams.get("categoryId");
@@ -108,6 +107,7 @@ const page = () => {
                                     );
                                 }}
                                 key={product.id}
+                                className="cursor-pointer"
                             >
                                 <ProductCard image="1" product={product} />
                             </div>

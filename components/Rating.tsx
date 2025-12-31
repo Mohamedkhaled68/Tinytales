@@ -1,10 +1,12 @@
 import { GiRoundStar } from "react-icons/gi";
 
-const Rating = ({ rating }: { rating: number }) => {
+const Rating = ({ rating }: { rating: string }) => {
+    const roundedRating = Math.round(Number(rating));
+
     return (
         <>
             <div className="flex items-center gap-1">
-                {Array.from({ length: rating }, (_, i) => {
+                {Array.from({ length: roundedRating }, (_, i) => {
                     return (
                         <GiRoundStar
                             className="text-tiny-pink"
@@ -13,7 +15,7 @@ const Rating = ({ rating }: { rating: number }) => {
                         />
                     );
                 })}
-                {Array.from({ length: 5 - rating }, (_, i) => {
+                {Array.from({ length: 5 - roundedRating }, (_, i) => {
                     return (
                         <GiRoundStar
                             className="text-tiny-pink/50"

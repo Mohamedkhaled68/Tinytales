@@ -16,16 +16,31 @@ const MainPagesHeader = () => {
     const pathSegments = pathname.split("/").filter((segment) => segment);
 
     const lang = pathSegments[0];
-    const segments = pathSegments.slice(1);
+    const segments = pathSegments
+        .slice(1)
+        .map((segment) => decodeURIComponent(segment));
 
     const formatSegmentName = (segment: string) => {
-        pagesName.forEach((page) => {
-            if (page.routeLink === segment) {
-                segment = page.name;
-            }
-        });
+        const decodedSegment = decodeURIComponent(segment);
 
-        return segment
+        // Check if it matches any predefined page names
+        const matchedPage = pagesName.find(
+            (page) => page.routeLink === decodedSegment
+        );
+        if (matchedPage) {
+            return matchedPage.name;
+        }
+
+        // If it's already in a readable format (Arabic or contains spaces), return as is
+        if (
+            /[\u0600-\u06FF]/.test(decodedSegment) ||
+            decodedSegment.includes(" ")
+        ) {
+            return decodedSegment;
+        }
+
+        // Otherwise, format kebab-case to Title Case
+        return decodedSegment
             .split("-")
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ");
@@ -37,7 +52,11 @@ const MainPagesHeader = () => {
                     {!pathname.includes("/cart") &&
                         !pathname.includes("/profile") &&
                         !pathname.includes("/notifications") && (
-                            <SectionName secName={formatSegmentName(pathSegments.slice(-1)[0])} />
+                            <SectionName
+                                secName={formatSegmentName(
+                                    pathSegments.slice(-1)[0]
+                                )}
+                            />
                         )}
                     <Breadcrumb
                         lang={lang}
