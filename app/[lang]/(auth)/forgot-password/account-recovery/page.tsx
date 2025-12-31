@@ -1,4 +1,4 @@
-import AccountRecoveryForm from "@/components/AccountRecoveryForm";
+import AccountRecoveryForm from "@/components/auth/AccountRecoveryForm";
 
 const page = () => {
     return <AccountRecoveryForm />;

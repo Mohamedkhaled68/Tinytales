@@ -1,3 +1,4 @@
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Product } from "@/types/Product";
 import Image from "next/image";
 import { GiRoundStar } from "react-icons/gi";
@@ -8,6 +9,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ image, product }: ProductCardProps) => {
+    const { lang } = useLanguage();
     return (
         <>
             <div className="flex flex-col gap-2  w-full">
@@ -16,12 +18,17 @@ const ProductCard = ({ image, product }: ProductCardProps) => {
                     <div className="flex items-center justify-between">
                         {product.discount_percentage && (
                             <div className="rounded-lg border border-[#4040401A] text-tiny-pink text-[10px] font-poppins-semibold font-semibold py-1.5 px-2 lg:py-2 lg:px-4">
-                                {product.discount_percentage}% OFF
+                                {product.discount_percentage}%{" "}
+                                {lang === "ar" ? "خصم" : "OFF"}
                             </div>
                         )}
                         <div
-                            className={`flex items-center gap-1.25 ml-auto ${
+                            className={`flex items-center gap-1.25 ${
                                 product.discount_percentage ? "" : "ml-auto"
+                            } ${
+                                lang === "ar" && product.discount_percentage
+                                    ? "flex-row-reverse mr-auto"
+                                    : ""
                             }`}
                         >
                             <div className="rounded-lg border w-8 h-8 border-[#4040401A] text-tiny-pink text-[10px] font-poppins-semibold font-semibold p-1.5">
@@ -93,12 +100,22 @@ const ProductCard = ({ image, product }: ProductCardProps) => {
                         {product.description}
                     </h1>
                     <div className="flex items-center gap-2">
-                        <span className="font-poppins-medium font-medium text-sm lg:text-[16px] text-tiny-black">
-                            AED {product.price}
+                        <span
+                            className={`font-poppins-medium font-medium text-sm lg:text-[16px] text-tiny-black flex items-center gap-1 ${
+                                lang === "ar" ? "flex-row-reverse" : ""
+                            }`}
+                        >
+                            <span>{lang === "ar" ? "د.إ" : "AED"}</span>
+                            <span>{product.price}</span>
                         </span>
                         {product.price_before_discount && (
-                            <span className="font-poppins-medium font-medium text-xs lg:text-sm text-tiny-black-200 line-through">
-                                AED {product.price_before_discount}
+                            <span
+                                className={`font-poppins-medium font-medium text-xs lg:text-sm text-tiny-black-200 line-through flex items-center gap-1 ${
+                                    lang === "ar" ? "flex-row-reverse" : ""
+                                }`}
+                            >
+                                <span>{lang === "ar" ? "د.إ" : "AED"}</span>
+                                <span>{product.price_before_discount}</span>
                             </span>
                         )}
                     </div>

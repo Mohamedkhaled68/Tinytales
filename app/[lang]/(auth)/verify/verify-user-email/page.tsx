@@ -1,4 +1,4 @@
-import VerifyEmailOtp from "@/components/VerifyEmailOtp";
+import VerifyEmailOtp from "@/components/auth/VerifyEmailOtp";
 
 const page = () => {
     return <VerifyEmailOtp />;

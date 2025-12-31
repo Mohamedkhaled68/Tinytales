@@ -1,5 +1,6 @@
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
+import MainPagesHeader from "@/components/MainPagesHeader";
+import Footer from "@/components/ui/Footer";
+import Navbar from "@/components/ui/Navbar";
 
 export default function AuthLayout({
     children,
@@ -8,7 +9,8 @@ export default function AuthLayout({
 }) {
     return (
         <div className="app-layout">
-            <Navbar/>
+            <Navbar />
+            <MainPagesHeader />
             <div className="min-h-screen flex flex-col">{children}</div>
             <Footer />
         </div>

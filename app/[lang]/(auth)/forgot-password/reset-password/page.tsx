@@ -1,4 +1,4 @@
-import CreateNewPassword from "@/components/CreateNewPassword";
+import CreateNewPassword from "@/components/auth/CreateNewPassword";
 
 const page = () => {
     return <CreateNewPassword />;

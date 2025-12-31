@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { getToken } from "@/lib/token";
+import { getDictionary } from "@/app/[lang]/dictionaries";
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,6 +29,7 @@ const Navbar = () => {
     const [showProfilePage, setShowProfilePage] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+    const [dic, setDic] = useState<any>(null);
     const [selectedLanguage, setSelectedLanguage] = useState<{
         code: "en" | "ar";
         name: string;
@@ -38,15 +40,21 @@ const Navbar = () => {
 
     const { logoutUser } = useAuth();
 
+    const getDic = async () => {
+        const dictionary = await getDictionary(lang as "en" | "ar");
+        setDic(dictionary);
+    };
+
     const languages: Array<{ code: "en" | "ar"; name: string }> = [
         { code: "en", name: "English" },
-        { code: "ar", name: "Arabic" },
+        { code: "ar", name: "العربية" },
     ];
 
     useEffect(() => {
+        getDic();
         setSelectedLanguage({
             code: (lang as "en" | "ar") || "en",
-            name: lang === "ar" ? "Arabic" : "English",
+            name: lang === "ar" ? "العربية" : "English",
         });
     }, [lang]);
 
@@ -83,7 +91,7 @@ const Navbar = () => {
     const menuLinks = [
         {
             href: `/${lang}`,
-            label: "Home",
+            label: dic?.navbar.home || "Home",
             icon: (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +132,7 @@ const Navbar = () => {
         },
         {
             href: `/${lang}/categories`,
-            label: "Our Categories",
+            label: dic?.navbar.categories || "Our Categories",
             icon: (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -172,7 +180,7 @@ const Navbar = () => {
         },
         {
             href: `/${lang}/about`,
-            label: "About Us",
+            label: dic?.navbar.about || "About Us",
             icon: (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -207,7 +215,7 @@ const Navbar = () => {
         },
         {
             href: `/${lang}/contact`,
-            label: "Contact Us",
+            label: dic?.navbar.contact || "Contact Us",
             icon: (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -244,7 +252,7 @@ const Navbar = () => {
         },
         {
             href: `/${lang}/FAQs`,
-            label: "FAQs",
+            label: dic?.navbar.faqs || "FAQs",
             icon: (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -284,7 +292,7 @@ const Navbar = () => {
     const menuProfileLinks = [
         {
             href: `/${lang}/profile/general-settings`,
-            label: "General Settings",
+            label: dic?.navbar.general_settings || "General Settings",
             icon: (
                 <svg
                     className="w-5 h-5 text-tiny-black-200"
@@ -325,7 +333,7 @@ const Navbar = () => {
         },
         {
             href: `/${lang}/profile/address`,
-            label: "My Address",
+            label: dic?.navbar.my_address || "My Address",
             icon: (
                 <svg
                     className="w-5 h-5 text-tiny-black-200"
@@ -370,7 +378,7 @@ const Navbar = () => {
         },
         {
             href: `/${lang}/profile/orders-history`,
-            label: "Orders History",
+            label: dic?.navbar.orders_history || "Orders History",
             icon: (
                 <svg
                     className="w-5 h-5 text-tiny-black-200"
@@ -425,7 +433,9 @@ const Navbar = () => {
                 type="button"
                 onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
                 disabled={isLoading}
-                className="cursor-pointer flex items-center gap-1 px-3 py-2 rounded-full hover:bg-gray-100 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`cursor-pointer flex items-center ${
+                    lang === "ar" ? "flex-row-reverse" : ""
+                } gap-1 px-3 py-2 rounded-full hover:bg-gray-100 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
             >
                 <span className="text-sm font-medium text-tiny-black">
                     {selectedLanguage.code.toUpperCase()}
@@ -454,7 +464,11 @@ const Navbar = () => {
                         className="fixed inset-0 z-10"
                         onClick={() => setShowLanguageDropdown(false)}
                     />
-                    <div className="absolute top-full right-0 mt-2 w-32 bg-white border border-black/15 rounded-lg shadow-lg z-20 overflow-hidden">
+                    <div
+                        className={`absolute top-full ${
+                            lang === "ar" ? "left-0" : "right-0"
+                        } mt-2 w-32 bg-white border border-black/15 rounded-lg shadow-lg z-20 overflow-hidden`}
+                    >
                         {languages.map((language) => (
                             <button
                                 key={language.code}
@@ -480,13 +494,14 @@ const Navbar = () => {
         <nav className="w-full p-5 shadow-[0px_0px_52px_-24px_#00000040] relative bg-white">
             <div className="container mx-auto flex justify-between items-center">
                 {/* Logo */}
-                <Image
-                    src="/images/logo.svg"
-                    alt="Tinytales Logo"
-                    width={45}
-                    height={35}
-                    loading="eager"
-                />
+                <Link href={"/"} className="relative w-21 h-11 ">
+                    <Image
+                        src="/images/logo.svg"
+                        alt="Tinytales Logo"
+                        fill
+                        loading="eager"
+                    />
+                </Link>
 
                 {/* Desktop Navigation Links */}
                 <div className="hidden lg:flex items-center gap-8">
@@ -508,7 +523,13 @@ const Navbar = () => {
                                 >
                                     {link.label}
                                     {isActive && (
-                                        <span className="absolute -bottom-1 left-0 w-7 h-0.5 bg-tiny-pink rounded-lg" />
+                                        <span
+                                            className={`absolute  ${
+                                                lang === "ar"
+                                                    ? "right-0 -bottom-2"
+                                                    : "left-0 -bottom-1"
+                                            } w-7 h-0.5 bg-tiny-pink rounded-lg`}
+                                        />
                                     )}
                                 </span>
                             </Link>
@@ -520,13 +541,13 @@ const Navbar = () => {
                     <>
                         {/* Desktop Icons "logged in user" */}
                         <div className="hidden lg:flex items-center">
-                            <button className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
+                            <button className="cursor-pointer flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
                                 <BsHandbag
                                     size={22}
                                     className="text-tiny-black"
                                 />
                             </button>
-                            <button className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
+                            <button className="cursor-pointer flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
                                 <svg
                                     className="w-5 h-5 text-tiny-black"
                                     fill="none"
@@ -541,13 +562,13 @@ const Navbar = () => {
                                     />
                                 </svg>
                             </button>
-                            <button className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
+                            <button className="cursor-pointer flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
                                 <IoHeartOutline
                                     size={22}
                                     className="text-tiny-black"
                                 />
                             </button>
-                            <button className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
+                            <button className="cursor-pointer flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-100 transition duration-200">
                                 <IoCartOutline
                                     size={22}
                                     className="text-tiny-black"
@@ -557,8 +578,14 @@ const Navbar = () => {
                             <div className="relative">
                                 <button
                                     type="button"
-                                    onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                                    className="cursor-pointer flex items-center gap-1 px-3 py-2 rounded-full hover:bg-gray-100 transition duration-200"
+                                    onClick={() =>
+                                        setShowProfileDropdown(
+                                            !showProfileDropdown
+                                        )
+                                    }
+                                    className={`cursor-pointer flex items-center ${
+                                        lang === "ar" ? "flex-row-reverse" : ""
+                                    } gap-1 px-3 py-2 rounded-full hover:bg-gray-100 transition duration-200`}
                                 >
                                     <MdOutlineAccountCircle
                                         size={24}
@@ -566,7 +593,9 @@ const Navbar = () => {
                                     />
                                     <svg
                                         className={`w-4 h-4 text-tiny-black transition-transform ${
-                                            showProfileDropdown ? "rotate-180" : ""
+                                            showProfileDropdown
+                                                ? "rotate-180"
+                                                : ""
                                         }`}
                                         fill="none"
                                         stroke="currentColor"
@@ -586,38 +615,59 @@ const Navbar = () => {
                                     <>
                                         <div
                                             className="fixed inset-0 z-10"
-                                            onClick={() => setShowProfileDropdown(false)}
+                                            onClick={() =>
+                                                setShowProfileDropdown(false)
+                                            }
                                         />
-                                        <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-black/15 rounded-lg shadow-lg z-20 overflow-hidden">
-                                            {menuProfileLinks.map((link, index) => {
-                                                const isActive = pathname === link.href;
-                                                return (
-                                                    <Link
-                                                        key={index}
-                                                        href={link.href}
-                                                        onClick={() => setShowProfileDropdown(false)}
-                                                        className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-poppins-medium transition-colors hover:bg-gray-50"
-                                                    >
-                                                        {isActive ? link.activeIcon : link.icon}
-                                                        <span
-                                                            className={`${
-                                                                isActive
-                                                                    ? "text-tiny-pink"
-                                                                    : "text-tiny-black-200"
-                                                            }`}
+                                        <div
+                                            className={`absolute top-full ${
+                                                lang === "ar"
+                                                    ? "-right-40"
+                                                    : "-left-40"
+                                            } mt-2 w-56 bg-white border border-black/15 rounded-lg shadow-lg z-20 overflow-hidden`}
+                                        >
+                                            {menuProfileLinks.map(
+                                                (link, index) => {
+                                                    const isActive =
+                                                        pathname === link.href;
+                                                    return (
+                                                        <Link
+                                                            key={index}
+                                                            href={link.href}
+                                                            onClick={() =>
+                                                                setShowProfileDropdown(
+                                                                    false
+                                                                )
+                                                            }
+                                                            className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-poppins-medium transition-colors hover:bg-gray-50"
                                                         >
-                                                            {link.label}
-                                                        </span>
-                                                    </Link>
-                                                );
-                                            })}
+                                                            {isActive
+                                                                ? link.activeIcon
+                                                                : link.icon}
+                                                            <span
+                                                                className={`${
+                                                                    isActive
+                                                                        ? "text-tiny-pink"
+                                                                        : "text-tiny-black-200"
+                                                                }`}
+                                                            >
+                                                                {link.label}
+                                                            </span>
+                                                        </Link>
+                                                    );
+                                                }
+                                            )}
                                             <div className="border-t border-gray-200">
                                                 <button
                                                     onClick={() => {
-                                                        setShowProfileDropdown(false);
-                                                        setShowLogoutConfirm(true);
+                                                        setShowProfileDropdown(
+                                                            false
+                                                        );
+                                                        setShowLogoutConfirm(
+                                                            true
+                                                        );
                                                     }}
-                                                    className="flex items-center gap-3 px-4 py-3 w-full text-sm font-medium font-poppins-medium text-[#D90202] hover:bg-red-50 transition-colors"
+                                                    className="cursor-pointer flex items-center gap-3 px-4 py-3 w-full text-sm font-medium font-poppins-medium text-[#D90202] hover:bg-red-50 transition-colors"
                                                 >
                                                     <svg
                                                         className="w-5 h-5"
@@ -632,7 +682,10 @@ const Navbar = () => {
                                                             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                                                         />
                                                     </svg>
-                                                    <span>Logout</span>
+                                                    <span>
+                                                        {dic?.navbar.logout ||
+                                                            "Logout"}
+                                                    </span>
                                                 </button>
                                             </div>
                                         </div>
@@ -645,7 +698,9 @@ const Navbar = () => {
                                 <>
                                     <div
                                         className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4"
-                                        onClick={() => setShowLogoutConfirm(false)}
+                                        onClick={() =>
+                                            setShowLogoutConfirm(false)
+                                        }
                                     >
                                         <div
                                             className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl"
@@ -654,13 +709,17 @@ const Navbar = () => {
                                             <div className="text-center mb-6">
                                                 <div className="w-15 h-15 relative mx-auto">
                                                     <Image
-                                                        src={"/icons/logout.svg"}
+                                                        src={
+                                                            "/icons/logout.svg"
+                                                        }
                                                         alt="logout-icon"
                                                         fill
                                                     />
                                                 </div>
                                                 <h3 className="text-[20px] font-poppins-semibold font-semibold text-tiny-black mb-2 mt-2">
-                                                    Are you sure you want to Log Out?
+                                                    {dic?.navbar
+                                                        .logout_confirm ||
+                                                        "Are you sure you want to Log Out?"}
                                                 </h3>
                                             </div>
                                             <div className="flex gap-3">
@@ -668,13 +727,19 @@ const Navbar = () => {
                                                     onClick={handleLogout}
                                                     className="flex-1 px-4 py-2.5 bg-[#D90202] text-white font-poppins-medium rounded-lg transition duration-200"
                                                 >
-                                                    Logout
+                                                    {dic?.navbar.logout ||
+                                                        "Logout"}
                                                 </button>
                                                 <button
-                                                    onClick={() => setShowLogoutConfirm(false)}
+                                                    onClick={() =>
+                                                        setShowLogoutConfirm(
+                                                            false
+                                                        )
+                                                    }
                                                     className="flex-1 px-4 py-2.5 text-[#D90202] border border-[#D90202] font-poppins-medium rounded-lg transition duration-200"
                                                 >
-                                                    Cancel
+                                                    {dic?.navbar.cancel ||
+                                                        "Cancel"}
                                                 </button>
                                             </div>
                                         </div>
@@ -693,7 +758,7 @@ const Navbar = () => {
                                 className="cursor-pointer flex items-center gap-1 rounded-xl border-[0.5px] border-[#0000001A] bg-tiny-pink px-9.5 py-3.5"
                             >
                                 <span className="text-sm font-poppins-medium font-medium text-white">
-                                    Login
+                                    {dic?.navbar.login || "Login"}
                                 </span>
                                 <div className="relative w-6 h-6">
                                     <Image
@@ -727,7 +792,7 @@ const Navbar = () => {
                             <div className="px-5 pt-5">
                                 <div className="w-full flex justify-between items-center  border-b border-gray-200 pb-5">
                                     <h1 className="text-[24px] font-medium font-poppins-medium text-tiny-black">
-                                        Menu
+                                        {dic?.navbar.menu || "Menu"}
                                     </h1>
                                     <button
                                         onClick={toggleMenu}
@@ -767,7 +832,13 @@ const Navbar = () => {
                                                         {link.label}
                                                     </span>
                                                     {isActive && (
-                                                        <span className="absolute bottom-2 left-11 w-4.5 h-0.5 bg-tiny-pink rounded-lg" />
+                                                        <span
+                                                            className={`absolute bottom-2  ${
+                                                                lang === "ar"
+                                                                    ? "right-11 w-6"
+                                                                    : "left-11 w-4.5"
+                                                            } h-0.5 bg-tiny-pink rounded-lg`}
+                                                        />
                                                     )}
                                                 </Link>
                                             </div>
@@ -799,7 +870,8 @@ const Navbar = () => {
                                                 />
                                             </svg>
                                             <span className="font-poppins-regular font-normal text-tiny-black-200 text-base">
-                                                Language
+                                                {dic?.navbar.language ||
+                                                    "Language"}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2">
@@ -807,7 +879,11 @@ const Navbar = () => {
                                                 {selectedLanguage.name}
                                             </span>
                                             <svg
-                                                className="w-4 h-4"
+                                                className={`w-4 h-4 ${
+                                                    lang === "ar"
+                                                        ? "rotate-180"
+                                                        : ""
+                                                }`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
@@ -829,11 +905,15 @@ const Navbar = () => {
                                     <div className="mt-auto pt-6">
                                         <Link
                                             href={`/${lang}/login`}
-                                            className="flex items-center justify-center gap-2 w-full rounded-xl bg-tiny-pink px-6 py-4"
+                                            className={`flex items-center ${
+                                                lang === "ar"
+                                                    ? "flex-row-reverse"
+                                                    : ""
+                                            } justify-center gap-2 w-full rounded-xl bg-tiny-pink px-6 py-4`}
                                             onClick={() => setIsMenuOpen(false)}
                                         >
                                             <span className="text-base font-poppins-medium font-medium text-white">
-                                                Login
+                                                {dic?.navbar.login || "Login"}
                                             </span>
                                             <div className="relative w-5 h-5">
                                                 <Image
@@ -862,12 +942,17 @@ const Navbar = () => {
                                                         className="text-tiny-black-200"
                                                     />
                                                     <span className="font-poppins-regular font-normal text-tiny-black-200 text-base">
-                                                        My Profile
+                                                        {dic?.navbar.profile ||
+                                                            "My Profile"}
                                                     </span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <svg
-                                                        className="w-4 h-4"
+                                                        className={`w-4 h-4 ${
+                                                            lang === "ar"
+                                                                ? "rotate-180"
+                                                                : ""
+                                                        }`}
                                                         fill="none"
                                                         stroke="currentColor"
                                                         viewBox="0 0 24 24"
@@ -885,19 +970,21 @@ const Navbar = () => {
                                             <button className="flex items-center gap-3 px-4 py-4 w-full text-tiny-black-200 hover:bg-gray-50 rounded-lg transition duration-200">
                                                 <BsHandbag size={22} />
                                                 <span className="font-poppins-regular font-normal text-tiny-black-200 text-base">
-                                                    Orders
+                                                    {dic?.navbar.orders ||
+                                                        "Orders"}
                                                 </span>
                                             </button>
                                             <button className="flex items-center gap-3 px-4 py-4 w-full text-tiny-black-200 hover:bg-gray-50 rounded-lg transition duration-200">
                                                 <IoHeartOutline size={22} />
                                                 <span className="font-poppins-regular font-normal text-tiny-black-200 text-base">
-                                                    Wishlist
+                                                    {dic?.navbar.wishlist ||
+                                                        "Wishlist"}
                                                 </span>
                                             </button>
                                             <button className="flex items-center gap-3 px-4 py-4 w-full text-tiny-black-200 hover:bg-gray-50 rounded-lg transition duration-200">
                                                 <IoCartOutline size={22} />
                                                 <span className="font-poppins-regular font-normal text-tiny-black-200 text-base">
-                                                    Cart
+                                                    {dic?.navbar.cart || "Cart"}
                                                 </span>
                                             </button>
                                         </div>
@@ -908,10 +995,15 @@ const Navbar = () => {
                                                 onClick={() =>
                                                     setShowLogoutConfirm(true)
                                                 }
-                                                className="flex items-center justify-center gap-2 w-full rounded-xl bg-[#D90202] px-6 py-4 transition duration-200"
+                                                className={`flex items-center ${
+                                                    lang === "ar"
+                                                        ? "flex-row-reverse"
+                                                        : ""
+                                                } justify-center gap-2 w-full rounded-xl bg-[#D90202] px-6 py-4 transition duration-200`}
                                             >
                                                 <span className="text-base font-poppins-medium font-medium text-white">
-                                                    Logout
+                                                    {dic?.navbar.logout ||
+                                                        "Logout"}
                                                 </span>
                                                 <svg
                                                     className="w-5 h-5 text-white"
@@ -957,8 +1049,9 @@ const Navbar = () => {
                                                         />
                                                     </div>
                                                     <h3 className="text-[20px] font-poppins-semibold font-semibold text-tiny-black mb-2 mt-2">
-                                                        Are you sure you want to
-                                                        Log Out?
+                                                        {dic?.navbar
+                                                            .logout_confirm ||
+                                                            "Are you sure you want to Log Out?"}
                                                     </h3>
                                                 </div>
                                                 <div className="flex gap-3">
@@ -966,7 +1059,8 @@ const Navbar = () => {
                                                         onClick={handleLogout}
                                                         className="flex-1 px-4 py-2.5 bg-[#D90202] text-white font-poppins-medium rounded-lg transition duration-200"
                                                     >
-                                                        Logout
+                                                        {dic?.navbar.logout ||
+                                                            "Logout"}
                                                     </button>
                                                     <button
                                                         onClick={() =>
@@ -976,7 +1070,8 @@ const Navbar = () => {
                                                         }
                                                         className="flex-1 px-4 py-2.5 text-[#D90202] border border-[#D90202] font-poppins-medium rounded-lg transition duration-200"
                                                     >
-                                                        Cancel
+                                                        {dic?.navbar.cancel ||
+                                                            "Cancel"}
                                                     </button>
                                                 </div>
                                             </div>
@@ -994,7 +1089,9 @@ const Navbar = () => {
                                     className="flex items-center gap-2 text-tiny-black"
                                 >
                                     <svg
-                                        className="w-6 h-6"
+                                        className={`w-6 h-6 ${
+                                            lang === "ar" ? "rotate-180" : ""
+                                        }`}
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -1007,7 +1104,7 @@ const Navbar = () => {
                                         />
                                     </svg>
                                     <span className="font-poppins-medium font-medium text-tiny-black text-[24px]">
-                                        Language
+                                        {dic?.navbar.language || "Language"}
                                     </span>
                                 </button>
                                 <button
@@ -1061,7 +1158,9 @@ const Navbar = () => {
                                     className="flex items-center gap-2 text-tiny-black"
                                 >
                                     <svg
-                                        className="w-6 h-6"
+                                        className={`w-6 h-6 ${
+                                            lang === "ar" ? "rotate-180" : ""
+                                        }`}
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -1074,7 +1173,7 @@ const Navbar = () => {
                                         />
                                     </svg>
                                     <span className="font-poppins-medium font-medium text-tiny-black text-[24px]">
-                                        My Profile
+                                        {dic?.navbar.profile || "My Profile"}
                                     </span>
                                 </button>
                                 <button
@@ -1110,7 +1209,13 @@ const Navbar = () => {
                                                     {link.label}
                                                 </span>
                                                 {isActive && (
-                                                    <span className="absolute bottom-1 left-9.5 w-4.5 h-0.5 bg-tiny-pink rounded-lg" />
+                                                    <span
+                                                        className={`absolute  ${
+                                                            lang === "ar"
+                                                                ? "right-9.5 left-auto bottom-0 w-7"
+                                                                : "left-9.5 bottom-1 w-4.5"
+                                                        }  h-0.5 bg-tiny-pink rounded-lg`}
+                                                    />
                                                 )}
                                             </Link>
                                         );

@@ -21,8 +21,7 @@ axiosInstance.interceptors.request.use(
 
         // Get current language from URL path
         if (typeof window !== "undefined") {
-            const lang = window.location.pathname.split("/")[1] || "en";
-
+            const lang = window.location.pathname.split("/")[1];
             config.headers["X-Lang"] = lang;
         }
 

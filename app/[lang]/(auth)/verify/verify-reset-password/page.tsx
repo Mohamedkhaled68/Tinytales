@@ -1,4 +1,4 @@
-import VerifyResetPasswordOtp from "@/components/VerifyResetPasswordOtp";
+import VerifyResetPasswordOtp from "@/components/auth/VerifyResetPasswordOtp";
 
 const page = () => {
     return <VerifyResetPasswordOtp />;

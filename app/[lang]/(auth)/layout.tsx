@@ -1,4 +1,4 @@
-import AuthLanguageSelector from "@/components/AuthLanguageSelector";
+import AuthLanguageSelector from "@/components/auth/AuthLanguageSelector";
 
 export default function AuthLayout({
     children,

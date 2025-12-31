@@ -80,5 +80,70 @@
             "mobile_invalid": "Please enter a valid phone number (7-15 digits)",
             "otp_required": "Please enter all 6 digits"
         }
+    },
+    "navbar": {
+        "menu": "Menu",
+        "home": "Home",
+        "categories": "Our Categories",
+        "about": "About Us",
+        "contact": "Contact Us",
+        "faqs": "FAQs",
+        "language": "Language",
+        "login": "Login",
+        "logout": "Logout",
+        "cancel": "Cancel",
+        "profile": "My Profile",
+        "general_settings": "General Settings",
+        "my_address": "My Address",
+        "orders_history": "Orders History",
+        "orders": "Orders",
+        "wishlist": "Wishlist",
+        "cart": "Cart",
+        "logout_confirm": "Are you sure you want to Log Out?"
+    },
+    "footer": {
+        "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy dolor sit amet, consectetuer adipiscing elit, sed diam nonummy",
+        "contact_us": "Contact Us",
+        "let_us_help": "Let Us Help",
+        "my_account": "My Account",
+        "faqs": "FAQs",
+        "contact_support": "Contact & Support",
+        "categories": "Categories",
+        "all_products": "All Products",
+        "send_email": "Send Email",
+        "email_placeholder": "Email address",
+        "send": "Send",
+        "follow_us": "Follow Us"
+    },
+    "how_it_works": {
+        "title": "How It Works",
+        "description": "With simple steps, explore, choose, and order your products easily. From browsing to delivery, we provide a smooth and fast shopping experience!",
+        "steps": [
+            {
+                "title": "Sign in",
+                "description": "Enter your account details to access all features easily."
+            },
+            {
+                "title": "Add to Cart",
+                "description": "Easily add selected products to your cart."
+            },
+            {
+                "title": "Complete Order",
+                "description": "Enter details and select payment."
+            },
+            {
+                "title": "Shipping and Delivery",
+                "description": "Your order will be prepared and shipped quickly."
+            },
+            {
+                "title": "Enjoy your products",
+                "description": "Receive your order and enjoy great quality."
+            }
+        ]
+    },
+    "help": {
+        "title": "Need Help? We're Always Here to Support You",
+        "description": "Whether you have a question, need guidance, or just want to talk to someone — our team is always ready to support you. Don't hesitate to reach out.",
+        "contact_us_now": "Contact Us Now"
     }
 }
