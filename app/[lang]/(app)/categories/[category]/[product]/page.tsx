@@ -7,14 +7,14 @@ import RatingAndReviews from "@/components/RatingAndReviews";
 import { useGetProductById } from "@/hooks/useGetProductById";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Loading from "@/components/ui/Loading";
+import SimilarProducts from "@/components/SimilarProducts";
 
 const page = () => {
     const searchParams = useSearchParams();
     const productId = searchParams.get("productId");
-    console.log(productId);
     const { lang } = useLanguage();
 
-    const { product, rates, isLoading } = useGetProductById(
+    const { product, rates, isLoading, similar } = useGetProductById(
         productId as string
     );
 
@@ -34,7 +34,10 @@ const page = () => {
                             <ProductDetails product={product} />
                         </section>
                         <section className="mt-16">
-                            <RatingAndReviews rates={rates} />
+                            <RatingAndReviews
+                                rates={rates}
+                                productId={productId as string}
+                            />
                         </section>
                         <div className="mt-10 mb-16 flex flex-col gap-5">
                             {rates &&
@@ -57,6 +60,7 @@ const page = () => {
                                     : "View More Comments"}
                             </button>
                         </div>
+                        <SimilarProducts similar={similar} />
                     </>
                 )}
             </div>

@@ -6,11 +6,19 @@ import { useState } from "react";
 import AddReviewModal from "./AddReviewModal";
 import { useRouter } from "next/navigation";
 import { getToken } from "@/lib/token";
+import { useAddRate } from "@/hooks/useAddRate";
 
-const RatingAndReviews = ({ rates }: { rates: any }) => {
+const RatingAndReviews = ({
+    rates,
+    productId,
+}: {
+    rates: any;
+    productId: string;
+}) => {
     const { lang } = useLanguage();
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { addRate, isLoading } = useAddRate();
 
     const handleAddReviewClick = () => {
         const token = getToken();
@@ -21,9 +29,16 @@ const RatingAndReviews = ({ rates }: { rates: any }) => {
         setIsModalOpen(true);
     };
 
-    const handleSubmitReview = (rating: number, comment: string) => {
-        console.log("Rating:", rating, "Comment:", comment);
-        // TODO: Add API call to submit review
+    const handleSubmitReview = async (rating: number, comment: string) => {
+        await addRate({
+            productId: parseInt(productId),
+            rate: rating,
+            comment: comment,
+        });
+        // Refresh the page to show new review after modal closes
+        setTimeout(() => {
+            router.refresh();
+        }, 1500);
     };
 
     return (
@@ -118,6 +133,7 @@ const RatingAndReviews = ({ rates }: { rates: any }) => {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleSubmitReview}
+                isLoading={isLoading}
             />
         </>
     );

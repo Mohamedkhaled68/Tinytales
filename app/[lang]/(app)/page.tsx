@@ -9,6 +9,7 @@ import TopSeller from "@/components/landing/TopSeller";
 import { useGetHome } from "@/hooks/useGetHome";
 import { useCommunications } from "@/contexts/CommunicationsContext";
 import { useEffect } from "react";
+import Loading from "@/components/ui/Loading";
 
 export default function Home() {
     const {
@@ -31,13 +32,23 @@ export default function Home() {
 
     return (
         <>
-            <Slider sliders={sliders} />
-            <CategoriesSlider categories={categories} />
-            <TopSeller products={products} />
-            <HowItWork />
-            <Reviews customerFeedback={customer_feedback} />
-            <Help />
-            <Faqs faqs={faqs} />
+            {isLoading ? (
+                <>
+                    <div className="w-full h-screen flex justify-center items-center">
+                        <Loading width="100" height="100" />
+                    </div>
+                </>
+            ) : (
+                <>
+                    <Slider sliders={sliders} />
+                    <CategoriesSlider categories={categories} />
+                    <TopSeller products={products} />
+                    <HowItWork />
+                    <Reviews customerFeedback={customer_feedback} />
+                    <Help />
+                    <Faqs faqs={faqs} />
+                </>
+            )}
         </>
     );
 }

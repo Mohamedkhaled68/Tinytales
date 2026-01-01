@@ -33,7 +33,7 @@ const Footer = () => {
 
     useEffect(() => {
         setToken(getToken() || null);
-    }, []);
+    }, [token]);
 
     return (
         <footer className="relative h-167.5 lg:h-80 w-full overflow-hidden">

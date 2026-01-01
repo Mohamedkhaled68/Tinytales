@@ -80,8 +80,10 @@ export const useGetProductById = (productId: string) => {
     };
 
     useEffect(() => {
-        fetchProduct();
-    }, []);
+        if (productId) {
+            fetchProduct();
+        }
+    }, [productId]);
 
     return {
         product,
