@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Flag from "react-world-flags";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 import countriesData from "@/public/data/countries.json";
 import { getDictionary } from "../../dictionaries";
@@ -33,6 +34,9 @@ export default function RegisterPage() {
     });
 
     const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirmation, setShowPasswordConfirmation] =
+        useState(false);
     const [errors, setErrors] = useState<{
         name?: string;
         email?: string;
@@ -335,7 +339,13 @@ export default function RegisterPage() {
                                                     )
                                                 }
                                             />
-                                            <div className={`absolute top-full ${lang === "ar" ? "right-0" : "left-0"} mt-1 w-72 max-h-60 overflow-y-auto bg-white border border-black/15 rounded-lg shadow-lg z-20`}>
+                                            <div
+                                                className={`absolute top-full ${
+                                                    lang === "ar"
+                                                        ? "right-0"
+                                                        : "left-0"
+                                                } mt-1 w-72 max-h-60 overflow-y-auto bg-white border border-black/15 rounded-lg shadow-lg z-20`}
+                                            >
                                                 {countriesData.map(
                                                     (country: any) => (
                                                         <button
@@ -403,26 +413,45 @@ export default function RegisterPage() {
                                 htmlFor="password"
                                 className={`absolute -top-2 ${
                                     lang === "ar" ? "right-3" : "left-3"
-                                } font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2`}
+                                } font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2 z-10`}
                             >
                                 {dic?.auth.register.password}
                             </label>
-                            <input
-                                type="password"
-                                className={`rounded-[10px] border-[0.5px] ${
-                                    errors.password
-                                        ? "border-red-500"
-                                        : "border-black/15"
-                                } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
-                                name="password"
-                                id="password"
-                                value={form.password}
-                                onChange={handleChange}
-                                onBlur={() => handleBlur("password")}
-                                placeholder={
-                                    dic?.auth.register.password_placeholder
-                                }
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    className={`rounded-[10px] border-[0.5px] ${
+                                        errors.password
+                                            ? "border-red-500"
+                                            : "border-black/15"
+                                    } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none ${
+                                        lang === "ar" ? "pl-12" : "pr-12"
+                                    }`}
+                                    name="password"
+                                    id="password"
+                                    value={form.password}
+                                    onChange={handleChange}
+                                    onBlur={() => handleBlur("password")}
+                                    placeholder={
+                                        dic?.auth.register.password_placeholder
+                                    }
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
+                                    className={`absolute top-1/2 -translate-y-1/2 ${
+                                        lang === "ar" ? "left-4" : "right-4"
+                                    } text-tiny-black-200 hover:text-tiny-black transition`}
+                                >
+                                    {showPassword ? (
+                                        <IoEyeOffOutline size={20} />
+                                    ) : (
+                                        <IoEyeOutline size={20} />
+                                    )}
+                                </button>
+                            </div>
                             {errors.password && (
                                 <p className="text-xs text-red-600 font-poppins-regular mt-1">
                                     {errors.password}
@@ -434,29 +463,54 @@ export default function RegisterPage() {
                                 htmlFor="password_confirmation"
                                 className={`absolute -top-2 ${
                                     lang === "ar" ? "right-3" : "left-3"
-                                } font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2`}
+                                } font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2 z-10`}
                             >
                                 {dic?.auth.register.password_confirmation}
                             </label>
-                            <input
-                                type="password"
-                                className={`rounded-[10px] border-[0.5px] ${
-                                    errors.password_confirmation
-                                        ? "border-red-500"
-                                        : "border-black/15"
-                                } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
-                                name="password_confirmation"
-                                id="password_confirmation"
-                                value={form.password_confirmation}
-                                onChange={handleChange}
-                                onBlur={() =>
-                                    handleBlur("password_confirmation")
-                                }
-                                placeholder={
-                                    dic?.auth.register
-                                        .password_confirmation_placeholder
-                                }
-                            />
+                            <div className="relative">
+                                <input
+                                    type={
+                                        showPasswordConfirmation
+                                            ? "text"
+                                            : "password"
+                                    }
+                                    className={`rounded-[10px] border-[0.5px] ${
+                                        errors.password_confirmation
+                                            ? "border-red-500"
+                                            : "border-black/15"
+                                    } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none ${
+                                        lang === "ar" ? "pl-12" : "pr-12"
+                                    }`}
+                                    name="password_confirmation"
+                                    id="password_confirmation"
+                                    value={form.password_confirmation}
+                                    onChange={handleChange}
+                                    onBlur={() =>
+                                        handleBlur("password_confirmation")
+                                    }
+                                    placeholder={
+                                        dic?.auth.register
+                                            .password_confirmation_placeholder
+                                    }
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setShowPasswordConfirmation(
+                                            !showPasswordConfirmation
+                                        )
+                                    }
+                                    className={`absolute top-1/2 -translate-y-1/2 ${
+                                        lang === "ar" ? "left-4" : "right-4"
+                                    } text-tiny-black-200 hover:text-tiny-black transition`}
+                                >
+                                    {showPasswordConfirmation ? (
+                                        <IoEyeOffOutline size={20} />
+                                    ) : (
+                                        <IoEyeOutline size={20} />
+                                    )}
+                                </button>
+                            </div>
                             {errors.password_confirmation && (
                                 <p className="text-xs text-red-600 font-poppins-regular mt-1">
                                     {errors.password_confirmation}

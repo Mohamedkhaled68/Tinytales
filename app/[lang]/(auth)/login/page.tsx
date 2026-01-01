@@ -7,10 +7,12 @@ import Link from "next/link";
 import { getDictionary } from "../../dictionaries";
 import { useAuth } from "@/hooks/useAuth";
 import toast from "react-hot-toast";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState<{ email?: string; password?: string }>(
         {}
     );
@@ -141,25 +143,44 @@ export default function LoginPage() {
                             htmlFor="password"
                             className={`absolute -top-2 ${
                                 lang === "ar" ? "right-3" : "left-3"
-                            } font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2`}
+                            } z-10 font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2`}
                         >
                             {dic?.auth.login.password}
                         </label>
-                        <input
-                            type="password"
-                            className={`rounded-[10px] border-[0.5px] ${
-                                errors.password
-                                    ? "border-red-500"
-                                    : "border-black/15"
-                            } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
-                            name="password"
-                            id="password"
-                            value={password}
-                            onChange={handlePasswordChange}
-                            onBlur={handlePasswordBlur}
-                            placeholder={dic?.auth.login.password_placeholder}
-                            disabled={isLoading}
-                        />
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                className={`rounded-[10px] border-[0.5px] ${
+                                    errors.password
+                                        ? "border-red-500"
+                                        : "border-black/15"
+                                } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none ${
+                                    lang === "ar" ? "pl-12" : "pr-12"
+                                }`}
+                                name="password"
+                                id="password"
+                                value={password}
+                                onChange={handlePasswordChange}
+                                onBlur={handlePasswordBlur}
+                                placeholder={
+                                    dic?.auth.login.password_placeholder
+                                }
+                                disabled={isLoading}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className={`absolute top-1/2 -translate-y-1/2 ${
+                                    lang === "ar" ? "left-4" : "right-4"
+                                } text-tiny-black-200 hover:text-tiny-black transition`}
+                            >
+                                {showPassword ? (
+                                    <IoEyeOffOutline size={20} />
+                                ) : (
+                                    <IoEyeOutline size={20} />
+                                )}
+                            </button>
+                        </div>
                         {errors.password && (
                             <p className="text-xs text-red-600 font-poppins-regular mt-1">
                                 {errors.password}

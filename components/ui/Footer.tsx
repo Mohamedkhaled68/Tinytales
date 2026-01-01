@@ -20,8 +20,7 @@ const Footer = () => {
     const { lang } = useLanguage();
     const { communications } = useCommunications();
     const [dic, setDic] = useState<any>(null);
-
-    const token = getToken();
+    const [token, setToken] = useState<string | null>(null);
 
     const getDic = async () => {
         const dictionary = await getDictionary(lang as "en" | "ar");
@@ -31,6 +30,10 @@ const Footer = () => {
     useEffect(() => {
         getDic();
     }, [lang]);
+
+    useEffect(() => {
+        setToken(getToken() || null);
+    }, []);
 
     return (
         <footer className="relative h-167.5 lg:h-80 w-full overflow-hidden">

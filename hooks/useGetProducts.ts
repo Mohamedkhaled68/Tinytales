@@ -18,10 +18,19 @@ interface Meta {
     }[];
 }
 
-export const useGetProducts = (categoryId: string) => {
+interface AttributeFilter {
+    id: number;
+    value: string;
+}
+
+export const useGetProducts = (
+    categoryId: string,
+    attributesProduct?: AttributeFilter[]
+) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [meta, setMeta] = useState<Meta | null>(null);
     const [links, setLinks] = useState<Links | null>(null);
+    const [attributes, setAttributes] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -30,13 +39,20 @@ export const useGetProducts = (categoryId: string) => {
             setIsLoading(true);
             setError(null);
 
-            const response = await axiosInstance.post(`/products`, {
+            const requestBody: any = {
                 categories_ids: [categoryId],
-            });
+            };
+
+            if (attributesProduct && attributesProduct.length > 0) {
+                requestBody.attributres_product = attributesProduct;
+            }
+
+            const response = await axiosInstance.post(`/products`, requestBody);
 
             setProducts(response.data.products.data || []);
             setMeta(response.data.products.meta || null);
             setLinks(response.data.products.links || null);
+            setAttributes(response.data.attributes || null);
         } catch (err: any) {
             const errorMessage =
                 err.response?.data?.message ||
@@ -51,12 +67,13 @@ export const useGetProducts = (categoryId: string) => {
 
     useEffect(() => {
         fetchProducts();
-    }, []);
+    }, [categoryId, JSON.stringify(attributesProduct)]);
 
     return {
         products,
         meta,
         links,
+        attributes,
         isLoading,
         error,
         refetch: fetchProducts,

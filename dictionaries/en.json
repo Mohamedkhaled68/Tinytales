@@ -101,6 +101,14 @@
         "cart": "Cart",
         "logout_confirm": "Are you sure you want to Log Out?"
     },
+    "breadcrumb": {
+        "home": "Home",
+        "categories": "Our Categories",
+        "about": "About Us",
+        "contact": "Contact Us",
+        "profile": "My Profile",
+        "product_details": "Product Details"
+    },
     "footer": {
         "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy dolor sit amet, consectetuer adipiscing elit, sed diam nonummy",
         "contact_us": "Contact Us",

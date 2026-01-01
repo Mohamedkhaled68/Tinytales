@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 const CreateNewPassword = () => {
     const { lang } = useParams<{ lang: "en" | "ar" }>();
@@ -20,6 +21,9 @@ const CreateNewPassword = () => {
         password?: string;
         password_confirmation?: string;
     }>({});
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirmation, setShowPasswordConfirmation] =
+        useState(false);
 
     const getDic = async () => {
         const dictionary = await getDictionary(lang);
@@ -163,24 +167,41 @@ const CreateNewPassword = () => {
                         >
                             {dic?.auth.create_new_password.password}
                         </label>
-                        <input
-                            type="password"
-                            className={`rounded-[10px] border-[0.5px] ${
-                                errors.password
-                                    ? "border-red-500"
-                                    : "border-black/15"
-                            } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
-                            name="password"
-                            id="password"
-                            value={form.password}
-                            onChange={handleChange}
-                            onBlur={() => handleBlur("password")}
-                            disabled={isLoading}
-                            placeholder={
-                                dic?.auth.create_new_password
-                                    .password_placeholder
-                            }
-                        />
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                className={`rounded-[10px] border-[0.5px] ${
+                                    errors.password
+                                        ? "border-red-500"
+                                        : "border-black/15"
+                                } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none ${
+                                    lang === "ar" ? "pl-12" : "pr-12"
+                                }`}
+                                name="password"
+                                id="password"
+                                value={form.password}
+                                onChange={handleChange}
+                                onBlur={() => handleBlur("password")}
+                                disabled={isLoading}
+                                placeholder={
+                                    dic?.auth.create_new_password
+                                        .password_placeholder
+                                }
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className={`absolute top-1/2 -translate-y-1/2 ${
+                                    lang === "ar" ? "left-4" : "right-4"
+                                } text-gray-500 hover:text-gray-700`}
+                            >
+                                {showPassword ? (
+                                    <IoEyeOffOutline size={20} />
+                                ) : (
+                                    <IoEyeOutline size={20} />
+                                )}
+                            </button>
+                        </div>
                         {errors.password && (
                             <p className="text-xs text-red-600 font-poppins-regular mt-1">
                                 {errors.password}
@@ -199,24 +220,51 @@ const CreateNewPassword = () => {
                                     .password_confirmation
                             }
                         </label>
-                        <input
-                            type="password"
-                            className={`rounded-[10px] border-[0.5px] ${
-                                errors.password_confirmation
-                                    ? "border-red-500"
-                                    : "border-black/15"
-                            } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none`}
-                            name="password_confirmation"
-                            id="password_confirmation"
-                            value={form.password_confirmation}
-                            onChange={handleChange}
-                            onBlur={() => handleBlur("password_confirmation")}
-                            disabled={isLoading}
-                            placeholder={
-                                dic?.auth.create_new_password
-                                    .password_confirmation_placeholder
-                            }
-                        />
+                        <div className="relative">
+                            <input
+                                type={
+                                    showPasswordConfirmation
+                                        ? "text"
+                                        : "password"
+                                }
+                                className={`rounded-[10px] border-[0.5px] ${
+                                    errors.password_confirmation
+                                        ? "border-red-500"
+                                        : "border-black/15"
+                                } font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none ${
+                                    lang === "ar" ? "pl-12" : "pr-12"
+                                }`}
+                                name="password_confirmation"
+                                id="password_confirmation"
+                                value={form.password_confirmation}
+                                onChange={handleChange}
+                                onBlur={() =>
+                                    handleBlur("password_confirmation")
+                                }
+                                disabled={isLoading}
+                                placeholder={
+                                    dic?.auth.create_new_password
+                                        .password_confirmation_placeholder
+                                }
+                            />
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowPasswordConfirmation(
+                                        !showPasswordConfirmation
+                                    )
+                                }
+                                className={`absolute top-1/2 -translate-y-1/2 ${
+                                    lang === "ar" ? "left-4" : "right-4"
+                                } text-gray-500 hover:text-gray-700`}
+                            >
+                                {showPasswordConfirmation ? (
+                                    <IoEyeOffOutline size={20} />
+                                ) : (
+                                    <IoEyeOutline size={20} />
+                                )}
+                            </button>
+                        </div>
                         {errors.password_confirmation && (
                             <p className="text-xs text-red-600 font-poppins-regular mt-1">
                                 {errors.password_confirmation}

@@ -53,6 +53,25 @@ const Navbar = () => {
 
     useEffect(() => {
         getDic();
+
+        // Check localStorage for saved language preference
+        const savedLang = localStorage.getItem("preferredLanguage") as
+            | "en"
+            | "ar"
+            | null;
+
+        // If there's a saved language and it's different from current URL lang, redirect
+        if (savedLang && savedLang !== lang) {
+            const newPath = pathname.replace(`/${lang}`, `/${savedLang}`);
+            router.replace(newPath);
+            return;
+        }
+
+        // Save current language to localStorage
+        if (lang) {
+            localStorage.setItem("preferredLanguage", lang);
+        }
+
         setSelectedLanguage({
             code: (lang as "en" | "ar") || "en",
             name: lang === "ar" ? "العربية" : "English",
@@ -72,10 +91,13 @@ const Navbar = () => {
         setShowLanguageDropdown(false);
         setIsLoading(true);
 
+        // Save to localStorage
+        localStorage.setItem("preferredLanguage", language.code);
+
         const newPath = pathname.replace(`/${lang}`, `/${language.code}`);
         const queryString = searchParams.toString();
         const fullPath = queryString ? `${newPath}?${queryString}` : newPath;
-        router.push(fullPath);
+        router.replace(fullPath);
     };
 
     const toggleMenu = () => {

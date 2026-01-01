@@ -72,12 +72,14 @@ const ProductDetails = ({ product }: { product: Product | null }) => {
                         <span>{product?.price}</span>
                         <span>{lang === "ar" ? "د.أ" : "AED"}</span>
                     </span>
-                    <span
-                        className={`flex items-center gap-1 font-poppins-regular font-normal text-[16px] text-tiny-black-200 line-through`}
-                    >
-                        <span>{product?.price_before_discount}</span>
-                        <span>{lang === "ar" ? "د.أ" : "AED"}</span>
-                    </span>
+                    {product?.price_before_discount && (
+                        <span
+                            className={`flex items-center gap-1 font-poppins-regular font-normal text-[16px] text-tiny-black-200 line-through`}
+                        >
+                            <span>{product?.price_before_discount}</span>
+                            <span>{lang === "ar" ? "د.أ" : "AED"}</span>
+                        </span>
+                    )}
                 </div>
                 <span className="font-poppins-regular font-normal text-xs text-tiny-black">
                     {lang === "ar"
@@ -94,80 +96,96 @@ const ProductDetails = ({ product }: { product: Product | null }) => {
             {/* Divider */}
             <div className="bg-[#E6E6E6] rounded-lg h-px w-full" />
 
-            {/* Actions */}
-            <div className="flex flex-col gap-6">
-                <div className="relative">
-                    <div
-                        className={`absolute -top-2 left-3 font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2 ${
-                            lang === "ar" ? "right-3 left-auto" : ""
-                        }`}
-                    >
-                        {lang === "ar" ? "النوع" : "Type"}
+            {product?.stock === 0 ? (
+                <>
+                    <div className="px-4 py-3 rounded-[10px] bg-[#D902020D] text-base text-[#D90202] font-medium font-poppins-medium">
+                        {lang === "ar" ? "نفد المخزون" : "out of stock"}
                     </div>
-                    <select
-                        className="cursor-pointer rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
-                        name="type"
-                    >
-                        <option value="">
-                            {lang === "ar" ? "اختر النوع" : "Select Type"}
-                        </option>
-                        <option value="cotton">
-                            {lang === "ar" ? "قطن" : "Cotton"}
-                        </option>
-                        <option value="linen">
-                            {lang === "ar" ? "كتان" : "Linen"}
-                        </option>
-                        <option value="polyester">
-                            {lang === "ar" ? "بوليستر" : "Polyester"}
-                        </option>
-                    </select>
-                </div>
-                <div className="relative">
-                    <div
-                        className={`absolute -top-2 left-3 font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2 ${
-                            lang === "ar" ? "right-3 left-auto" : ""
-                        }`}
-                    >
-                        {lang === "ar" ? "المقاس" : "Size"}
-                    </div>
-                    <select
-                        className="cursor-pointer rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
-                        name="size"
-                    >
-                        <option value="">
-                            {lang === "ar" ? "اختر المقاس" : "Select Size"}
-                        </option>
-                        <option value="small">
-                            {lang === "ar" ? "صغير" : "Small"}
-                        </option>
-                        <option value="medium">
-                            {lang === "ar" ? "متوسط" : "Medium"}
-                        </option>
-                        <option value="large">
-                            {lang === "ar" ? "كبير" : "Large"}
-                        </option>
-                    </select>
-                </div>
+                </>
+            ) : (
+                <>
+                    {/* Actions */}
+                    <div className="flex flex-col gap-6">
+                        <div className="relative">
+                            <div
+                                className={`absolute -top-2 left-3 font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2 ${
+                                    lang === "ar" ? "right-3 left-auto" : ""
+                                }`}
+                            >
+                                {lang === "ar" ? "النوع" : "Type"}
+                            </div>
+                            <select
+                                className="cursor-pointer rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
+                                name="type"
+                            >
+                                <option value="">
+                                    {lang === "ar"
+                                        ? "اختر النوع"
+                                        : "Select Type"}
+                                </option>
+                                <option value="cotton">
+                                    {lang === "ar" ? "قطن" : "Cotton"}
+                                </option>
+                                <option value="linen">
+                                    {lang === "ar" ? "كتان" : "Linen"}
+                                </option>
+                                <option value="polyester">
+                                    {lang === "ar" ? "بوليستر" : "Polyester"}
+                                </option>
+                            </select>
+                        </div>
+                        <div className="relative">
+                            <div
+                                className={`absolute -top-2 left-3 font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2 ${
+                                    lang === "ar" ? "right-3 left-auto" : ""
+                                }`}
+                            >
+                                {lang === "ar" ? "المقاس" : "Size"}
+                            </div>
+                            <select
+                                className="cursor-pointer rounded-[10px] border-[0.5px] border-black/15 font-medium font-poppins-medium text-xs text-tiny-black px-5 py-3.5 w-full outline-none"
+                                name="size"
+                            >
+                                <option value="">
+                                    {lang === "ar"
+                                        ? "اختر المقاس"
+                                        : "Select Size"}
+                                </option>
+                                <option value="small">
+                                    {lang === "ar" ? "صغير" : "Small"}
+                                </option>
+                                <option value="medium">
+                                    {lang === "ar" ? "متوسط" : "Medium"}
+                                </option>
+                                <option value="large">
+                                    {lang === "ar" ? "كبير" : "Large"}
+                                </option>
+                            </select>
+                        </div>
 
-                {product?.color_list && product.color_list.length > 0 && (
-                    <div className="flex flex-col gap-4">
-                        <h1 className="text-tiny-black text-[16px] font-poppins-medium font-medium">
-                            Colors
-                        </h1>
-                        <div className="flex items-center gap-2 relative pb-5">
-                            {product?.color_list.map((color) => {
-                                const isSelected = selectedColor === color.name;
+                        {product?.color_list &&
+                            product.color_list.length > 0 && (
+                                <div className="flex flex-col gap-4">
+                                    <h1 className="text-tiny-black text-[16px] font-poppins-medium font-medium">
+                                        Colors
+                                    </h1>
+                                    <div className="flex items-center gap-2 relative pb-5">
+                                        {product?.color_list.map((color) => {
+                                            const isSelected =
+                                                selectedColor === color;
 
-                                return (
-                                    <div
-                                        className="flex flex-col items-center"
-                                        key={color.name}
-                                    >
-                                        <div
-                                            onClick={() =>
-                                                setSelectedColor(color.name)
-                                            }
-                                            className={`
+                                            return (
+                                                <div
+                                                    className="flex flex-col items-center"
+                                                    key={color}
+                                                >
+                                                    <div
+                                                        onClick={() =>
+                                                            setSelectedColor(
+                                                                color
+                                                            )
+                                                        }
+                                                        className={`
                                 w-11 h-11 rounded-full
                                 flex justify-center items-center cursor-pointer
                                 bg-[#F4F7F9]
@@ -178,89 +196,109 @@ const ProductDetails = ({ product }: { product: Product | null }) => {
                                         : "border border-transparent"
                                 }
                             `}
-                                        >
-                                            <div
-                                                className="w-6 h-6 rounded-full"
-                                                style={{
-                                                    backgroundColor:
-                                                        color.bgColor,
-                                                }}
-                                            />
-                                        </div>
-                                        {isSelected && (
-                                            <span className="absolute bottom-0 text-center text-tiny-black-200 text-sm font-poppins-medium font-medium">
-                                                {color.name}
-                                            </span>
-                                        )}
+                                                    >
+                                                        <div
+                                                            className="w-6 h-6 rounded-full"
+                                                            style={{
+                                                                backgroundColor:
+                                                                    color,
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    {isSelected && (
+                                                        <span className="absolute bottom-0 text-center text-tiny-black-200 text-sm font-poppins-medium font-medium">
+                                                            {color}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
                                     </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
+                                </div>
+                            )}
 
-                <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-2">
-                        <h1 className="text-tiny-black text-[16px] font-poppins-medium font-medium">
-                            {lang === "ar" ? "الكمية" : "Quantity"}
-                        </h1>
-                        <span className="text-tiny-black-200 text-xs font-poppins-regular font-normal flex items-center gap-1">
-                            (
-                            <span className="flex flex-row-reverse gap-0.5">
-                                <span>{lang === "ar" ? "د.إ" : "AED"}</span>
-                                <span>{product?.price}</span>
-                            </span>
-                            {lang === "ar" ? " لكل وحدة" : "for Piece"})
-                        </span>
-                    </div>
-
-                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                        <div className="grow flex items-center gap-4 lg:w-[50%]">
-                            <div className="rounded-xl p-2 bg-[#F5F5F5] flex justify-between items-center w-[50%]">
-                                <button
-                                    onClick={handleDecrement}
-                                    disabled={quantity === 1}
-                                    className={`w-10 h-10 rounded-xl bg-white flex justify-center items-center font-medium font-poppins-medium text-[28px] transition-colors ${
-                                        quantity === 1
-                                            ? 'opacity-50 cursor-not-allowed text-tiny-black-100'
-                                            : 'cursor-pointer text-tiny-black hover:bg-gray-100'
-                                    }`}
-                                >
-                                    -
-                                </button>
-                                <span className="text-tiny-black-100 font-medium font-poppins-medium text-[24px]">
-                                    {quantity.toString().padStart(2, "0")}
+                        <div className="flex flex-col gap-4">
+                            <div className="flex items-center gap-2">
+                                <h1 className="text-tiny-black text-[16px] font-poppins-medium font-medium">
+                                    {lang === "ar" ? "الكمية" : "Quantity"}
+                                </h1>
+                                <span className="text-tiny-black-200 text-xs font-poppins-regular font-normal flex items-center gap-1">
+                                    (
+                                    <span className="flex flex-row-reverse gap-0.5">
+                                        <span>
+                                            {lang === "ar" ? "د.إ" : "AED"}
+                                        </span>
+                                        <span>{product?.price}</span>
+                                    </span>
+                                    {lang === "ar" ? " لكل وحدة" : "for Piece"})
                                 </span>
+                            </div>
+
+                            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                                <div className="grow flex items-center gap-4 lg:w-[50%]">
+                                    <div className="rounded-xl p-2 bg-[#F5F5F5] flex justify-between items-center w-[50%]">
+                                        <button
+                                            onClick={handleDecrement}
+                                            disabled={quantity === 1}
+                                            className={`w-10 h-10 rounded-xl bg-white flex justify-center items-center font-medium font-poppins-medium text-[28px] transition-colors ${
+                                                quantity === 1
+                                                    ? "opacity-50 cursor-not-allowed text-tiny-black-100"
+                                                    : "cursor-pointer text-tiny-black hover:bg-gray-100"
+                                            }`}
+                                        >
+                                            -
+                                        </button>
+                                        <span className="text-tiny-black-100 font-medium font-poppins-medium text-[24px]">
+                                            {quantity
+                                                .toString()
+                                                .padStart(2, "0")}
+                                        </span>
+                                        <button
+                                            onClick={handleIncrement}
+                                            disabled={
+                                                product?.stock
+                                                    ? quantity >= product.stock
+                                                    : false
+                                            }
+                                            className={`w-10 h-10 rounded-xl bg-white flex justify-center items-center font-medium font-poppins-medium text-[28px] transition-colors ${
+                                                product?.stock &&
+                                                quantity >= product.stock
+                                                    ? "opacity-50 cursor-not-allowed text-tiny-black-100"
+                                                    : "cursor-pointer text-tiny-black hover:bg-gray-100"
+                                            }`}
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                    <span className="text-tiny-black-500 font-medium font-poppins-medium text-[24px]">
+                                        {lang === "ar" ? "د.إ" : "AED"}{" "}
+                                        {totalPrice}
+                                    </span>
+                                </div>
                                 <button
-                                    onClick={handleIncrement}
-                                    disabled={product?.stock ? quantity >= product.stock : false}
-                                    className={`w-10 h-10 rounded-xl bg-white flex justify-center items-center font-medium font-poppins-medium text-[28px] transition-colors ${
-                                        product?.stock && quantity >= product.stock
-                                            ? 'opacity-50 cursor-not-allowed text-tiny-black-100'
-                                            : 'cursor-pointer text-tiny-black hover:bg-gray-100'
-                                    }`}
+                                    className={`cursor-pointer px-8 py-4 rounded-xl bg-tiny-pink font-medium font-poppins-medium text-white text-[16px] w-full lg:w-fit lg:mt-2 flex items-center ${
+                                        lang === "ar" ? "flex-row-reverse" : ""
+                                    } justify-center gap-2`}
                                 >
-                                    +
+                                    <span>
+                                        {lang === "ar"
+                                            ? "أضف إلى السلة"
+                                            : "Add To Cart"}
+                                    </span>
+                                    <div className="relative w-6 h-6 flex justify-center items-center">
+                                        <Image
+                                            src={"/images/shop-bag.webp"}
+                                            alt="shop bag icon"
+                                            width={18.363021850585938}
+                                            height={20.75}
+                                        />
+                                    </div>
                                 </button>
                             </div>
-                            <span className="text-tiny-black-500 font-medium font-poppins-medium text-[24px]">
-                                {lang === "ar" ? "د.إ" : "AED"} {totalPrice}
-                            </span>
                         </div>
-                        <button className={`cursor-pointer px-8 py-4 rounded-xl bg-tiny-pink font-medium font-poppins-medium text-white text-[16px] w-full lg:w-fit lg:mt-2 flex items-center ${lang === "ar" ? "flex-row-reverse" : ""} justify-center gap-2`}>
-                            <span>{lang === "ar" ? "أضف إلى السلة" : "Add To Cart"}</span>
-                            <div className="relative w-6 h-6 flex justify-center items-center">
-                                <Image
-                                    src={"/images/shop-bag.webp"}
-                                    alt="shop bag icon"
-                                    width={18.363021850585938}
-                                    height={20.75}
-                                />
-                            </div>
-                        </button>
                     </div>
-                </div>
-            </div>
+                </>
+            )}
         </div>
     );
 };

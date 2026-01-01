@@ -48,11 +48,15 @@ const TopSeller = ({ products }: { products: Product[] }) => {
             <div className="mt-11">
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2.25 gap-y-4 lg:gap-x-4">
                     {products.map((product) => (
-                        <ProductCard
+                        <Link
+                            href={`${lang}/categories/${product.categories[0].id}/product-details?productId=${product.id}`}
                             key={product.id}
-                            image={`1`}
-                            product={product}
-                        />
+                        >
+                            <ProductCard
+                                image={`1`}
+                                product={product}
+                            />
+                        </Link>
                     ))}
                 </div>
             </div>

@@ -77,7 +77,7 @@ const CategoriesSlider = ({ categories }: { categories: Category[] }) => {
                                 }
                                 className="flex flex-col items-center gap-1"
                             >
-                                <div className="relative w-36 h-36 p-11 rounded-full bg-[#E6E6E64D]">
+                                <div className="cursor-pointer relative w-36 h-36 p-11 rounded-full bg-[#E6E6E64D]">
                                     <Image
                                         src={"/icons/t-shirt.svg"}
                                         alt={category.name}

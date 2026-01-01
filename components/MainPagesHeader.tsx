@@ -2,16 +2,22 @@
 import SectionName from "./ui/SectionName";
 import Breadcrumb from "./ui/Breadcrumb";
 import { usePathname } from "next/navigation";
-
-const pagesName = [
-    { routeLink: "categories", name: "Our Categories" },
-    { routeLink: "about", name: "About Us" },
-    { routeLink: "contact", name: "Contact Us" },
-    { routeLink: "profile", name: "My Profile" },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getDictionary } from "@/app/[lang]/dictionaries";
+import { useEffect, useState } from "react";
 
 const MainPagesHeader = () => {
     const pathname = usePathname();
+    const { lang: currentLang } = useLanguage();
+    const [dic, setDic] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchDictionary = async () => {
+            const dictionary = await getDictionary(currentLang as "en" | "ar");
+            setDic(dictionary);
+        };
+        fetchDictionary();
+    }, [currentLang]);
 
     const pathSegments = pathname.split("/").filter((segment) => segment);
 
@@ -23,20 +29,26 @@ const MainPagesHeader = () => {
     const formatSegmentName = (segment: string) => {
         const decodedSegment = decodeURIComponent(segment);
 
-        // Check if it matches any predefined page names
-        const matchedPage = pagesName.find(
-            (page) => page.routeLink === decodedSegment
-        );
-        if (matchedPage) {
-            return matchedPage.name;
+        if (!dic) return decodedSegment;
+
+        // Check if we're on a product page (categories/category/product)
+        if (segments.length === 3 && segments[0] === "categories") {
+            // This is a product page - the last segment is the product
+            if (segment === segments[segments.length - 1]) {
+                return dic.breadcrumb?.product_details || "Product Details";
+            }
         }
 
-        // If it's already in a readable format (Arabic or contains spaces), return as is
-        if (
-            /[\u0600-\u06FF]/.test(decodedSegment) ||
-            decodedSegment.includes(" ")
-        ) {
-            return decodedSegment;
+        // Check if it matches any predefined page names in translations
+        const translationMap: { [key: string]: string } = {
+            categories: dic.breadcrumb?.categories || "Our Categories",
+            about: dic.breadcrumb?.about || "About Us",
+            contact: dic.breadcrumb?.contact || "Contact Us",
+            profile: dic.breadcrumb?.profile || "My Profile",
+        };
+
+        if (translationMap[decodedSegment]) {
+            return translationMap[decodedSegment];
         }
 
         // Otherwise, format kebab-case to Title Case
@@ -54,7 +66,18 @@ const MainPagesHeader = () => {
                         !pathname.includes("/notifications") && (
                             <SectionName
                                 secName={formatSegmentName(
-                                    pathSegments.slice(-1)[0]
+                                    (() => {
+                                        const lastSegment =
+                                            segments.slice(-1)[0];
+                                        // If last segment is a number, use the previous segment
+                                        if (
+                                            /^\d+$/.test(lastSegment) &&
+                                            segments.length > 1
+                                        ) {
+                                            return segments.slice(-2)[0];
+                                        }
+                                        return lastSegment;
+                                    })()
                                 )}
                             />
                         )}

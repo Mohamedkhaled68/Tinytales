@@ -79,7 +79,8 @@ const Slider = ({ sliders }: { sliders: Slider[] }) => {
                 </Swiper>
 
                 <div className="mt-11 flex flex-col items-center lg:items-start gap-5">
-                    <button
+                    <Link
+                        href={"/categories"}
                         className={`lg:hidden bg-tiny-pink px-9 py-3.5 rounded-xl ${
                             lang === "ar" ? "flex-row-reverse" : ""
                         } text-white font-poppins-semi-bold font-semibold text-sm`}
@@ -90,9 +91,10 @@ const Slider = ({ sliders }: { sliders: Slider[] }) => {
                         ) : (
                             <FaArrowRight className="inline-block ml-2" />
                         )}{" "}
-                    </button>
+                    </Link>
                     <div className="lg:flex items-center gap-6 hidden">
-                        <button
+                        <Link
+                            href={"/categories"}
                             className={`bg-tiny-pink px-9 py-3.5 rounded-xl ${
                                 lang === "ar" ? "flex-row-reverse" : ""
                             } text-white font-poppins-semi-bold font-semibold text-sm`}
@@ -103,7 +105,7 @@ const Slider = ({ sliders }: { sliders: Slider[] }) => {
                             ) : (
                                 <FaArrowRight className="inline-block ml-2" />
                             )}
-                        </button>
+                        </Link>
 
                         <div className="h-0.5 rounded-2xl bg-tiny-pink w-25" />
 
