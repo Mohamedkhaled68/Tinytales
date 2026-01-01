@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { FaAngleRight } from "react-icons/fa6";
 import { getDictionary } from "@/app/[lang]/dictionaries";
 import Link from "next/link";
+import { checkEmailForReset } from "@/services/authService";
 
 export default function VerifyResetPasswordOtp() {
     const router = useRouter();
@@ -99,10 +100,15 @@ export default function VerifyResetPasswordOtp() {
     };
 
     const handleResend = async () => {
+        const userEmail = localStorage.getItem("user_email");
+        if (!userEmail) {
+            setError("Session expired. Please start over.");
+            return;
+        }
         try {
             setError("");
             setCode(["", "", "", "", "", ""]);
-            await resendVerificationCode();
+            await checkEmailForReset(userEmail);
 
             // Set new expiry time (2 minutes from now)
             const expiryTime = Date.now() + 120000; // 120 seconds in milliseconds

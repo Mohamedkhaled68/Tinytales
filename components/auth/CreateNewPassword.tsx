@@ -122,6 +122,9 @@ const CreateNewPassword = () => {
             toast.success(dic?.auth.create_new_password.success_message);
 
             localStorage.removeItem("otp");
+            localStorage.removeItem("otp_status");
+            localStorage.removeItem("otp_expiry_time_reset");
+            localStorage.removeItem("otp_expiry_time");
             localStorage.removeItem("user_email");
         } catch (err: any) {
             // Error already handled by useAuth
@@ -163,7 +166,7 @@ const CreateNewPassword = () => {
                             htmlFor="password"
                             className={`absolute -top-2 ${
                                 lang === "ar" ? "right-3" : "left-3"
-                            } font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2`}
+                            } z-10 font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2`}
                         >
                             {dic?.auth.create_new_password.password}
                         </label>
@@ -213,7 +216,7 @@ const CreateNewPassword = () => {
                             htmlFor="password_confirmation"
                             className={`absolute -top-2 ${
                                 lang === "ar" ? "right-3" : "left-3"
-                            } font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2`}
+                            } z-10 font-normal font-poppins-regular text-xs text-tiny-black bg-white px-2`}
                         >
                             {
                                 dic?.auth.create_new_password
