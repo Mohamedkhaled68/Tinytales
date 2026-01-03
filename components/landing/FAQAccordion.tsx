@@ -10,9 +10,9 @@ export default function FAQAccordion({ faqs }: { faqs: FAQ[] }) {
     };
 
     return (
-        <div className="max-w-3xl mx-auto p-4">
+        <div className="w-full mx-auto p-4">
             <div className="overflow-hidden flex flex-col gap-5">
-                {faqs.map((item, index) => (
+                {faqs?.map((item, index) => (
                     <div
                         key={item.id}
                         className={`${
