@@ -26,7 +26,7 @@ const page = () => {
                         <div className="flex flex-col items-center">
                             <div className="relative w-24 h-24">
                                 <Image
-                                    src={"/icons/empty-box.webp"}
+                                    src={"/icons/faqs-notfound.svg"}
                                     fill
                                     alt="empty-box"
                                 />
